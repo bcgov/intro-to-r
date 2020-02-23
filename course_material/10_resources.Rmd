@@ -1,0 +1,52 @@
+---
+title: "10_resources"
+author: "G Perkins"
+date: "05/02/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Resources 
+
+Beginner courses (self paced)
+
+British Columbia Provincial Government - [R introduction course]("https://bcgov.github.io/ds-cop-intro-to-r/")
+
+
+## Other Helpful Resources
+
+* [RStudio cheat sheets](http://www.rstudio.com/resources/cheatsheets/)
+* [Quick R](http://www.statmethods.net/)
+* [Cookbook for R](http://www.cookbook-r.com/)
+
+
+
+Most of the above lesson material is sourced or an adaptation of the [Software Carpentry Foundation](http://software-carpentry.org/) (now The Carpenties) [R for Reproducible Scientific Analysis](http://swcarpentry.github.io/r-novice-gapminder/) lesson material: Thomas Wright and Naupaka Zimmerman (eds): _Software Carpentry: R for
+Reproducible Scientific Analysis_.  Version 2016.06, June 2016,
+https://github.com/swcarpentry/r-novice-gapminder,
+10.5281/zenodo.57520.
+
+- _Instructors_: [Sam Albers](https://github.com/boshek), [Stephanie Hazlitt](https://github.com/stephhazlitt) & [Andy Teucher](https://github.com/ateucher)
+- _Suggested pre-reading_: [Good Enough Practices for Scientific Computing](https://github.com/swcarpentry/good-enough-practices-in-scientific-computing/blob/gh-pages/good-enough-practices-for-scientific-computing.pdf)
+- _Course material_: https://bcgov.github.io/ds-cop-intro-to-r/
+- _Etherpad_: <https://pad.carpentries.org/ds-cop-intro-to-r>
+- _What we actually did on the day_: https://github.com/bcgov/ds-cop-intro-to-r/tree/master/what_we_actually_did/victoria_2019-10-02
+
+
+
+
+### License
+
+[![Creative Commons License](https://i.creativecommons.org/l/by/4.0/88x31.png)](http://creativecommons.org/licenses/by/4.0/). 
+
+```
+Original Work Copyright © Software Carpentry, content modified by the Province of British Columbia.
+
+This work is licensed under the Creative Commons Attribution 4.0 International License.
+To view a copy of this license, visit http://creativecommons.org/licenses/by/4.0/.
+```
+---
+*This project was created using the [bcgovr](https://github.com/bcgov/bcgovr) package.* 
