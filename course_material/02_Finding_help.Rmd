@@ -8,23 +8,15 @@ output: html_document
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 
-# Time esimate 
+# Time estimate 
     # teaching: 10
     # exercises: 10
 ```
 
 
-```{r, include=FALSE}
-source("bin/chunk-options.R")
-knitr_fig_path("03-")
-```
-
-
 ## Reading Help files
 
-R, and every package, provide help files for functions. The general syntax to search for help on any
-function, "function_name", from a specific function that is in a package loaded into your
-namespace (your interactive R session):
+R, and every package, provides help files for functions. To search for help on any function use a **?** before the "function_name":
 
 ```{r, eval=FALSE}
 ?function_name
@@ -149,17 +141,3 @@ fields. This can be a good starting point.
 > > separator for `read.table()`, although you may have to change
 > > the `comment.char` argument as well if your data file contains
 > > hash (#) characters
-© 2020 GitHub, Inc.
-Terms
-Privacy
-Security
-Status
-Help
-Contact GitHub
-Pricing
-API
-Training
-Blog
-About
-
-

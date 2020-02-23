@@ -15,8 +15,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 
 This lesson will be an introduction to R and R-studio and how they can make your life 
-easier! In this lesson we will get to know R and R-studio and some of the features you can you. 
-
+easier! In this lesson we will get to know R and R-studio and some of the features you can use. 
 
 ## Before Starting The Workshop
 
@@ -39,7 +38,7 @@ control and project management.
 
 **Basic layout**
 
-When you first open RStudio, you will be greeted by three panels:
+When you first open RStudio, you will see three panels:
 
   * The interactive R console (entire left)
   * Environment/History (tabbed in upper right)
@@ -318,7 +317,7 @@ Notice also that variables can be reassigned:
 x <- 100
 ```
 
-`x` used to contain the value 0.025 and and now it has the value 100.
+`x` used to contain the value 5 and and now it has the value 100.
 
 Assignment values can contain the variable being assigned to:
 
@@ -464,8 +463,7 @@ rm(list = ls())
 
 Think of packages like apps on your smart phone. Your phone can do a lot of
 things right out of the box, but you can get apps to make some existing
-functionality better (like a better timer), or allow you to do new and amazing
-things with your phone (like play Cwazy Cupcakes).
+functionality better, or allow you to do new and amazing things with your phone.
 
 Similarly, R comes with many functions built in, but it is possible to add
 functions to R by obtaining a package written by someone else. As of this
