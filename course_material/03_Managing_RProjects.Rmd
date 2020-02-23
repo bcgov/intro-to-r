@@ -9,11 +9,6 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-```{r, include=FALSE}
-source("bin/chunk-options.R")
-knitr_fig_path("02-")
-```
-
 # Project Management With RStudio
 
 ## Introduction
@@ -27,7 +22,12 @@ eventually everything is a bit mixed together.
 
 Most people tend to organize their projects like this:
 
-![](fig/bad_layout.png)
+```{r pressure, echo=FALSE, fig.cap="", out.width = '80%'}
+
+knitr::include_graphics("bad_layout.png")
+
+```
+
 
 There are many reasons why we should *ALWAYS* avoid this:
 
