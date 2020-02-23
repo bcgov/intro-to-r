@@ -35,10 +35,10 @@ The goal of this 1-day workshop is to teach people with no R experience how read
 
 ### Workshop Outline
 
-- **What is R? ** 
+- **What is R?** 
   - An Introduction to R & RStudio
   
-- **What can you do with R? **
+- **What can you do with R?**
   -	Example of data summaries and how to output plots  
   -	How to automate repeated work 
   -	Differences to excel (positives/negatives)
@@ -73,16 +73,18 @@ The goal of this 1-day workshop is to teach people with no R experience how read
   -	Create maps Map moose habitat 
  
   
+----------  
+  
 ### Questions ? 
 
 Please contact genevieve.perkins [at] gov.bc.ca  for questions or concerns. 
-
 
 
 ### Getting Help or Reporting an Issue
 
 To report bugs/issues/feature requests, please file an [issue](https://github.com/bcgov/bcgov-r-geo-workshop/issues/).
 
+----------
 
 ### How to Contribute
 
@@ -90,6 +92,8 @@ If you would like to contribute, please see our [CONTRIBUTING](CONTRIBUTING.md) 
 
 Please note that this project is released with a [Contributor Code of Conduct](CODE_OF_CONDUCT.md). By participating in this project you agree to abide by its terms.
 
+
+---------
 
 ### License
 
