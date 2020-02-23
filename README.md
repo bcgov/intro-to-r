@@ -6,7 +6,7 @@
 
 The repository contains lessons and resources for the one day "Introduction to R" designed to support skill development for the Environmental Stewardship Initiative. This includes software instruction details (R and R-studio), teaching material, and demonstration scripts to highlight possible applications of r. 
 
-The goal of this 1-day workshop is to teach people with no R experience how read in data from excel, clean the data, summarise the data (average and variability), and create graphs using the program R. The course will be very hands on and will be working with your own datasets
+The goal of this 1-day workshop is to teach people with no R experience how read in data from excel, clean the data, summarise the data (average and variability), and create graphs using the program R. The course will be very hands on and will be working with your own [datasets](https://github.com/bcgov/Wetland_SkeenaESI_Monitoring). 
 
 ---------
 
@@ -23,6 +23,7 @@ The goal of this 1-day workshop is to teach people with no R experience how read
 
 - **Mandatory**: Install R and RStudio ([_link_](https://github.com/bcgov/bcgov-data-science-resources/wiki/Installing-R-&-RStudio))
     - You can find detailed intructions [here](https://github.com/bcgov/intro-to-r/blob/master/install_readme/Rrrrrr_installation%20.pdf) and we can help with any problems at the start of the day. 
+
 
 
  - Recommended Reading (Beginner): 
