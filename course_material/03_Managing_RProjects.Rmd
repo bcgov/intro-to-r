@@ -61,9 +61,9 @@ project.
 > We're going to create a new project in RStudio:
 > 
 > First, we are going to download the course content. Download the zipfile from: 
-> <https://bit.ly/2oJNI50> and save it somewhere where you can find it 
+> <https://github.com/bcgov/intro-to-r.git> and save it somewhere where you can find it 
 > (e.g., your desktop), then unzip it.
-> You should have a folder called `ds-cop-intro-to-r` with a `README.md` file 
+> You should have a folder called `intro-to-r` with a `README.md` file 
 > and a `data` folder.
 >
 > 1. Click the "File" menu button, then "New Project".
