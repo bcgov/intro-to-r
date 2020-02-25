@@ -43,7 +43,7 @@ an app on your phone from the app store). Additionally, it is a good idea to
 periodically check for updates to that package:
 
 ```{r, eval=FALSE}
-install.packages("readxl")
+#install.packages("readxl")
 ```
 
 Everytime we want to use that package, you must load it into your R session, by 
@@ -57,8 +57,8 @@ Now we can load this data into R via the following using the `read_excel` functi
 
 ```{r}
 
+#wetland <- read_excel("./data/WetPlots.xlsx") 
 wetland <- read_excel("data/WetPlots.xlsx") 
-
 wetland
 
 ```
@@ -141,7 +141,7 @@ data types.
 We can see that it is a *data.frame* by calling the `class` function on it:
 
 ```{r}
-class(wetlands)
+class(wetland)
 
 ```
 
@@ -358,13 +358,13 @@ str(wetland[1,])
 > There are several subtly different ways to call variables, observations and
 > elements from data.frames:
 >
-> - `cats[1]`
-> - `cats[[1]]`
-> - `cats$coat`
-> - `cats["coat"]`
-> - `cats[1, 1]`
-> - `cats[, 1]`
-> - `cats[1, ]`
+> - `wetland[1]`
+> - `wetland[[1]]`
+> - `wetland$FID`
+> - `wetland["FID"]`
+> - `wetland[1, 1]`
+> - `wetland[, 1]`
+> - `wetland[1, ]`
 >
 > Try out these examples and explain what is returned by each one.
 >
@@ -372,41 +372,41 @@ str(wetland[1,])
 >
 > > ## Solution to Challenge 3
 > > ```{r, eval=TRUE, echo=TRUE}
-> > cats[1]
+> > wetland[1]
 > > ```
 > > We can think of a data frame as a list of vectors. The single brace `[1]`
 > returns the first slice of the list, as another list. In this case it is the
 > first column of the data frame.
 > > ```{r, eval=TRUE, echo=TRUE}
-> > cats[[1]]
+> > wetland[[1]]
 > > ```
 > > The double brace `[[1]]` returns the contents of the list item. In this case
 > it is the contents of the first column, a _vector_ of type _factor_.
 > > ```{r, eval=TRUE, echo=TRUE}
-> > cats$coat
+> > wetland$FID
 > > ```
-> > This example uses the `$` character to address items by name. _coat_ is the
+> > This example uses the `$` character to address items by name. _FID_ is the
 > first column of the data frame, again a _vector_ of type _factor_.
 > > ```{r, eval=TRUE, echo=TRUE}
-> > cats["coat"]
+> > wetland["FID"]
 > > ```
-> > Here we are using a single brace `["coat"]` replacing the index number with
+> > Here we are using a single brace `["FID"]` replacing the index number with
 > the column name. Like example 1, the returned object is a _list_.
 > > ```{r, eval=TRUE, echo=TRUE}
-> > cats[1, 1]
+> > wetland[1, 1]
 > > ```
 > > This example uses a single brace, but this time we provide row and column
 > coordinates. The returned object is the value in row 1, column 1. The object
 > is an _integer_ but because it is part of a _vector_ of type _factor_, R
 > displays the label "calico" associated with the integer value.
 > > ```{r, eval=TRUE, echo=TRUE}
-> > cats[, 1]
+> > wetland[, 1]
 > > ```
 > > Like the previous example we use single braces and provide row and column
 > coordinates. The row coordinate is not specified, R interprets this missing
 > value as all the elements in this _column_ _vector_.
 > > ```{r, eval=TRUE, echo=TRUE}
-> > cats[1, ]
+> > wetland[1, ]
 > > ```
 > > Again we use the single brace with row and column coordinates. The column
 > coordinate is not specified. The return value is a _list_ containing all the

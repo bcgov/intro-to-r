@@ -28,10 +28,6 @@ source: Rmd
 
 # Exploring Data Frames
 
-```{r, include=FALSE}
-source("bin/chunk-options.R")
-knitr_fig_path("05-")
-```
 
 At this point, you've seen it all: in the last lesson, we toured all the basic
 data types and data structures in R. Everything you do will be a manipulation of
@@ -39,103 +35,74 @@ those tools. But most of the time, the star of the show is the data frame—the 
 about working with data frames.
 
 ```{r}
-library(readr)
-cats <- read_csv("data/feline-data.csv")
+library(readxl)
+wetland <- read_excel("data/WetPlots.xlsx") 
+
 ```
 
 We can find the size and various other attributes of our data with a few handy functions:
 
 ```{r}
-nrow(cats)
-ncol(cats)
-dim(cats)
+nrow(wetland)
+ncol(wetland)
+dim(wetland)
 ```
 
 ```{r}
-names(cats)
-str(cats)
+names(wetland)
+str(wetland)
 ```
 
 A way to get a nice overall view of a data frame is to use the `summary` function. This function can be used on various objects in R. For data frames, `summary` yields a numeric, tabular, or descriptive summary of each column. Factor columns are summarized by the number of items in each level, numeric or integer columns by the descriptive statistics (quartiles and mean), and character columns by its length, class, and mode.  
 
 ```{r}
-summary(cats)
+summary(wetland)
 ```
 
 A really nice feature of RStudio is that it allows us to view our data in a 
-very readable and familiar way. Go ahead and click on the name of the `cats`
+very readable and familiar way. Go ahead and click on the name of the `wetland`
 data frame in the environment pane.
 
 Note that this is a read-only view, it's not editable (which is a good thing!)
 
 
-For an object containing the data type `factor`, each different value represents what is called a `level`. In our case, the `factor` "coat" has 3 levels: "black", "calico", and "tabby". 
+## Lets look into the rest of the data 
 
-## Realistic example
-
-So far, you have seen the basics of manipulating data frames with our cat data;
-now let's use those skills to digest a more realistic dataset. Let's read in the
-`gapminder` dataset that we downloaded previously:
+So far, you have seen the basics of manipulating data frames with our wetland data;
+however we are only reading in the first sheets. Let's use those skills to read in and investigate 
+the rest of the wetland data
 
 > ## Challenge 1
 >
-> Read in the gapminder dataset using read_csv and assign it to a data frame
-> called `gapminder`:
+> Read in sheet 2 "WetlandVeg" dataset using read_excel and assign it to a data frame
+> called `veg`. Hint use ?read_excel to see how to read in the second sheet.
 >
 > ```{r}
-> gapminder <- read_csv("data/gapminder_data.csv")
+> veg <- read_excel("data/WetPlots.xlsx", 3)
+> veg 
 > ```
 >
-> Then tell me how many rows and columns `gapminder` has:
+> Then tell me how many rows and columns `veg` has:
 > 
 > ```{r}
-> dim(gapminder)
-> nrow(gapminder)
-> ncol(gapminder)
+> dim(veg)
+> nrow(veg)
+> ncol(veg)
 > ```
 > 
-> And tell me what kind of data is in the `pop` and `continent` columns
+> And tell me what kind of data is in the `NewID` and `P1_UTM_Zone` columns
 > 
 > ```{r}
-> str(gapminder)
-> summary(gapminder)
+> str(Plot.ID)
+> summary(veg)
 > ```
 The first thing we should always do is check out what the data looks like with
 `str` or `summary`:
 
 ```{r}
-str(gapminder)
+str(veg)
 ```
 
-
-```{r}
-summary(gapminder$country)
-```
-
-
-> ## Miscellaneous Tips
->
-> * Files can also be downloaded directly from the Internet into a local
-> folder of your choice onto your computer using the `download.file` function.
-> The `read.csv` function can then be executed to read the downloaded file from the download location, for example,
-> ```{r eval=FALSE, echo=TRUE}
-> download.file("https://raw.githubusercontent.com/swcarpentry/r-novice-gapminder/gh-pages/_episodes_rmd/data/gapminder_data.csv", destfile = "data/gapminder_data.csv")
-> gapminder <- read_csv("data/gapminder_data.csv")
-> ```
->
-> * Alternatively, you can also read in files directly into R from the Internet by replacing the file paths with a web address in `read.csv`. One should note that in doing this no local copy of the csv file is first saved onto your computer. For example,
-> ```{r eval=FALSE, echo=TRUE}
-> gapminder <- read_csv("https://raw.githubusercontent.com/swcarpentry/r-novice-gapminder/gh-pages/_episodes_rmd/data/gapminder_data.csv")
-> ```
->
-> * You can read directly from excel spreadsheets without
-> converting them to plain text first by using the [readxl](https://cran.r-project.org/package=readxl) package.
-We'll also likely want to know what the titles of all the columns are, so we can
-ask for them:
-
-```{r}
-names(gapminder)
-```
 
 At this stage, it's important to ask ourselves if the structure R is reporting
 matches our intuition or expectations; do the basic data types reported for each
@@ -148,7 +115,7 @@ Once we're happy that the data types and structures seem reasonable, it's time
 to start digging into our data proper. Check out the first few lines:
 
 ```{r}
-head(gapminder)
+head(veg)
 ```
 
 > ## Challenge 2
@@ -161,8 +128,8 @@ head(gapminder)
 > > To check the last few lines it's relatively simple as R already has a function for this:
 > > 
 > > ~~~
-> > tail(gapminder)
-> > tail(gapminder, n = 15)
+> > tail(veg)
+> > tail(veg, n = 15)
 > > ~~~
 > > 
 > > What about a few arbitrary rows just for sanity (or insanity depending on your view)?
@@ -170,13 +137,14 @@ head(gapminder)
 > > The solution here presents one form of using nested functions, i.e. a function passed as an argument to another function. This might sound like a new concept, but you are already using it!
 > > Remember my_dataframe[rows, cols] will print to screen your data frame with the number of rows and columns you asked for (although you might have asked for a range or named columns for example). How would you get the last row if you don't know how many rows your data frame has? R has a function for this. What about getting a (pseudorandom) sample? R also has a function for this.
 > > ~~~
-> > gapminder[sample(nrow(gapminder), 5), ]
+> > veg[sample(nrow(veg), 5), ]
 > > ~~~
 Another very helpful function for looking at your data is the `unique` 
 function, to see the unique values in a particular column:
 
 ```{r}
-unique(gapminder$continent)
+unique(veg$Species.Name)
+sort(unique(veg$Species.Name))
 ```
 
 
@@ -186,7 +154,7 @@ into a script file so we can come back to it later.
 > ## Challenge 3
 >
 > Go to file -> new file -> R script, and write an R script
-> to load in the gapminder dataset. Put it in the `scripts/`
+> to load in the veg plot dataset. Put it in the `scripts/`
 > directory.
 >
 > Run the script using the `source` function, using the file path
@@ -225,30 +193,32 @@ my_data_frame[rows, columns]
 We can select rows using the square brackets like so:
 
 ```{r}
-gapminder[1, ]
-gapminder[100:110, ]
-gapminder[c(1, 3, 5, 7, 9), ]
+veg[1, ]
+veg[100:110, ]
+veg[c(1, 3, 5, 7, 9), ]
 ```
 
 It's unlikely that you'll often do this directly though, you'll usually want 
 to use some criteria. Say we just wanted the rows from Asia:
 
 ```{r}
-romania <- gapminder[gapminder$continent == "Asia", ]
-romania
+#willow <- veg[veg$Species.Name == "Scrub Birch", ]
+p1 <- veg[veg$Plot.ID == "P1", ]
+
+
 ```
 
 This works because subsetting can take either numerical positions like we showed
 above, OR a vector of `TRUE` and `FALSE`, returning the rows that are `TRUE`.
-`gapminder$contintent == "Asia"` generates a vector of `TRUE` and `FALSE`
+`veg$Plot.ID == "P1"` generates a vector of `TRUE` and `FALSE`
 values:
 
 ```{r}
-gapminder$continent == "Asia"
+veg$Species.Name == "Scrub Birch"
 ```
 
 and inserting that vector into the first position of the square brackets
-gives us just the rows where the `contintent` column is `"Asia"`.
+gives us just the rows where the `Species.Name` column is `"Scrub Birch"`.
 
 Another very useful operator in this context is the `%in%` operator - it can 
 tell you if a value is _one of_ a set of values:
@@ -256,53 +226,41 @@ tell you if a value is _one of_ a set of values:
 Say we wanted to select just Canada and Mexico:
 
 ```{r}
-gapminder$country %in% c("Canada", "Mexico")
+veg$Species.Name %in% c("Pacific Willow", "Sitka Willow")
 ```
 
 Now we can insert this into the first position of the square brackets:
 
 ```{r}
-can_mex <- gapminder$country %in% c("Canada", "Mexico")
-gapminder[can_mex, ]
+veg_willow <- veg$Species.Name %in% c("Pacific Willow", "Sitka Willow")
+veg[veg_willow, ]
 ```
 
 > ## Challenge 4
-> Select all the rows in `gapminder` with data from 1975 and earlier
+> Select all the rows in `veg`from plots P4:
 >
 > > Solution to Challenge 4
 > > ```{r}
-> > gapminder[gapminder$year <= 1975, ]
+> > veg[veg$Plot.ID == "P4", ]
 > > ```
 We saw previously how we can select a single column using the dollar sign `$`:
 
 ```{r}
-gapminder$country
+veg$Plot.ID
 ```
 
 If we wanted to select a subset of columns, we can specify that in the second 
 position using a character vector of column names:
 
 ```{r}
-gapminder[ , c("country", "year", "lifeExp")]
+veg[ , c("Plot.ID", "pc_cover")]
 ```
 
 > ## Challenge 5
-> Select all the rows in `gapminder` with data from Canada, and just the columns
-> year, pop, and gdpPercap
+> Select all the rows in `veg` with data from P3, and just the columns
+> NewID, Species.Name  and pc_cover
 >
 > > Solution to Challenge 5
 > > ```{r}
-> > gapminder[gapminder$country == "Canada", c("year", "pop", "gdpPercap")]
+> > veg[veg$Plot.ID == "P3", c("NewID", "Plot.ID", "pc_cover")]
 > > ```
-© 2020 GitHub, Inc.
-Terms
-Privacy
-Security
-Status
-Help
-Contact GitHub
-Pricing
-API
-Training
-Blog
-About
