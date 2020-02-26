@@ -26,6 +26,12 @@ keypoints:
 source: Rmd
 ---
 
+```{r, include=FALSE}
+#source("fig/chunk-options.R")
+#knitr_fig_path("6-")
+```
+
+
 # Exploring Data Frames
 
 
@@ -93,7 +99,7 @@ the rest of the wetland data
 > And tell me what kind of data is in the `NewID` and `P1_UTM_Zone` columns
 > 
 > ```{r}
-> str(Plot.ID)
+> str(veg$Plot.ID)
 > summary(veg)
 > ```
 The first thing we should always do is check out what the data looks like with
