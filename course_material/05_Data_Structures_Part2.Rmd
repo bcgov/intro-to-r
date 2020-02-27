@@ -1,7 +1,7 @@
 ---
 title: "Exploring Data Frames"
-author: "G Perkins"
 output: html_document
+#output: word_document
 ---
 
 ```{r setup, include=FALSE}
@@ -11,29 +11,16 @@ knitr::opts_chunk$set(echo = TRUE)
 #     teaching: 20
 #     exercises: 10
 
+#questions:
+#- "How can I manipulate a data frame?"
+#objectives:
+#- "Display basic properties of data frames including size and class of the columns, names, and first few rows."
+#- "Add and remove rows or columns."
+#- "Remove rows with `NA` values."
+#- "Append two data frames."
+#- "Understand what a `factor` is."
+#- "Convert a `factor` to a `character` vector and vice versa."
 ```
-
----
-
-questions:
-- "How can I manipulate a data frame?"
-objectives:
-- "Display basic properties of data frames including size and class of the columns, names, and first few rows."
-- "Add and remove rows or columns."
-- "Remove rows with `NA` values."
-- "Append two data frames."
-- "Understand what a `factor` is."
-- "Convert a `factor` to a `character` vector and vice versa."
-
----
-
-```{r, include=FALSE}
-#source("fig/chunk-options.R")
-#knitr_fig_path("6-")
-```
-
-
-# Exploring Data Frames
 
 
 At this point, you've seen it all: in the last lesson, we toured all the basic
@@ -79,36 +66,19 @@ So far, you have seen the basics of manipulating data frames with our wetland da
 however we are only reading in the first sheets. Let's use those skills to read in and investigate 
 the rest of the wetland data
 
-> ## Challenge 1
->
-> Read in sheet 2 "WetlandVeg" dataset using read_excel and assign it to a data frame
-> called `veg`. Hint use ?read_excel to see how to read in the second sheet.
->
-> ```{r}
-> veg <- read_excel("data/WetPlots.xlsx", 3)
-> veg 
-> ```
->
-> Then tell me how many rows and columns `veg` has:
-> 
-> ```{r}
-> dim(veg)
-> nrow(veg)
-> ncol(veg)
-> ```
-> 
-> And tell me what kind of data is in the `NewID` and `P1_UTM_Zone` columns
-> 
-> ```{r}
-> str(veg$Plot.ID)
-> summary(veg)
-> ```
+<style>
+div.green{ background-color:#FFFFE0; border-radius: 5px; padding: 20px;}
+</style>
+<div class = "green">
+
+## Challenge 1
+
+ Read in sheet 2 "WetVegPlots_DF" dataset using read_excel and assign it to a data frame
+ called `veg`. Hint use ?read_excel to see how to read in the second sheet.
 The first thing we should always do is check out what the data looks like with
 `str` or `summary`:
 
-```{r}
-str(veg)
-```
+</div>
 
 
 At this stage, it's important to ask ourselves if the structure R is reporting
@@ -122,70 +92,56 @@ Once we're happy that the data types and structures seem reasonable, it's time
 to start digging into our data proper. Check out the first few lines:
 
 ```{r}
+library(readxl)
+veg <- read_excel("data/WetPlots.xlsx", 3)
+
 head(veg)
 ```
 
-> ## Challenge 2
->
-> It's good practice to also check the last few lines of your data and some in the middle. How would you do this?
->
-> Searching for ones specifically in the middle isn't too hard but we could simply ask for a few lines at random. How would you code this?
->
-> > ## Solution to Challenge 2
-> > To check the last few lines it's relatively simple as R already has a function for this:
-> > 
-> > ~~~
-> > tail(veg)
-> > tail(veg, n = 15)
-> > ~~~
-> > 
-> > What about a few arbitrary rows just for sanity (or insanity depending on your view)?
-> > ## Tip: There are several ways to achieve this.
-> > The solution here presents one form of using nested functions, i.e. a function passed as an argument to another function. This might sound like a new concept, but you are already using it!
-> > Remember my_dataframe[rows, cols] will print to screen your data frame with the number of rows and columns you asked for (although you might have asked for a range or named columns for example). How would you get the last row if you don't know how many rows your data frame has? R has a function for this. What about getting a (pseudorandom) sample? R also has a function for this.
-> > ~~~
-> > veg[sample(nrow(veg), 5), ]
-> > ~~~
+<style>
+div.green{ background-color:#FFFFE0; border-radius: 5px; padding: 20px;}
+</style>
+<div class = "green">
+
+## Challenge 2
+
+It's good practice to also check the last few lines of your data and some in the middle. How would you do this?
+
+Searching for ones specifically in the middle isn't too hard but we could simply ask for a few lines at random. How would you code this?
+
+</div>
+
 Another very helpful function for looking at your data is the `unique` 
 function, to see the unique values in a particular column:
 
-```{r}
-unique(veg$Species.Name)
-sort(unique(veg$Species.Name))
+```{r, eval = FALSE}
+unique(veg$species.name)
+sort(unique(veg$species.name))
 ```
 
 
 To make sure our analysis is reproducible, we should put the code
 into a script file so we can come back to it later.
 
-> ## Challenge 3
->
-> Go to file -> new file -> R script, and write an R script
-> to load in the veg plot dataset. Put it in the `scripts/`
-> directory.
->
-> Run the script using the `source` function, using the file path
-> as its argument (or by pressing the "source" button in RStudio).
->
-> > ## Solution to Challenge 3
-> > 
-> > The `source` function can be used to use a script within a script.
-> > Assume you would like to load the same type of file over and over 
-> > again and therefore you need to specify the arguments to fit the 
-> > needs of your file. Instead of writing the necessary argument again
-> > and again you could just write it once and save it as a script. Then,
-> > you can use `source("Your_Script_containing_the_load_function")` in a new
-> > script to use the function of that script without writing everything again.
-> > Check out `?source` to find out more.
-> > 
-> > ```{r eval = FALSE}
-> > download.file("https://raw.githubusercontent.com/swcarpentry/r-novice-gapminder/gh-pages/_episodes_rmd/data/gapminder_data.csv", destfile = "data/gapminder_data.csv")
-> > gapminder <- read_csv(file = "data/gapminder_data.csv")
-> > ```
-> > To run the script and load the data into the `gapminder` variable:
-> > ```{r eval = FALSE}
-> > source(file = "scripts/load-gapminder.R")
-> > ```
+
+<style>
+div.green{ background-color:#FFFFE0; border-radius: 5px; padding: 20px;}
+</style>
+<div class = "green">
+
+
+## Challenge 3
+
+Go to file -> new file -> R script, and write an R script
+to load in the veg plot dataset. Put it in the `scripts/`
+directory.
+
+Run the script using the `source` function, using the file path
+as its argument (or by pressing the "source" button in RStudio).
+
+
+</div>
+
 ## Basic subsetting
 
 Data frames are two dimensions - rows and columns. We can access these using a 
@@ -209,23 +165,22 @@ It's unlikely that you'll often do this directly though, you'll usually want
 to use some criteria. Say we just wanted the rows from Asia:
 
 ```{r}
-#willow <- veg[veg$Species.Name == "Scrub Birch", ]
-p1 <- veg[veg$Plot.ID == "P1", ]
-
+#willow <- veg[veg$species.name == "Scrub Birch", ]
+p1 <- veg[veg$plot.id == 1, ]
 
 ```
 
 This works because subsetting can take either numerical positions like we showed
 above, OR a vector of `TRUE` and `FALSE`, returning the rows that are `TRUE`.
-`veg$Plot.ID == "P1"` generates a vector of `TRUE` and `FALSE`
+`veg$plot.id == 1` generates a vector of `TRUE` and `FALSE`
 values:
 
 ```{r}
-veg$Species.Name == "Scrub Birch"
+veg$species.name == "Scrub Birch"
 ```
 
 and inserting that vector into the first position of the square brackets
-gives us just the rows where the `Species.Name` column is `"Scrub Birch"`.
+gives us just the rows where the `species.name` column is `"Scrub Birch"`.
 
 Another very useful operator in this context is the `%in%` operator - it can 
 tell you if a value is _one of_ a set of values:
@@ -233,41 +188,108 @@ tell you if a value is _one of_ a set of values:
 Say we wanted to select just Canada and Mexico:
 
 ```{r}
-veg$Species.Name %in% c("Pacific Willow", "Sitka Willow")
+veg$species.name %in% c("Pacific Willow", "Sitka Willow")
 ```
 
 Now we can insert this into the first position of the square brackets:
 
 ```{r}
-veg_willow <- veg$Species.Name %in% c("Pacific Willow", "Sitka Willow")
+veg_willow <- veg$species.name %in% c("Pacific Willow", "Sitka Willow")
 veg[veg_willow, ]
 ```
 
-> ## Challenge 4
-> Select all the rows in `veg`from plots P4:
->
-> > Solution to Challenge 4
-> > ```{r}
-> > veg[veg$Plot.ID == "P4", ]
-> > ```
+
+<style>
+div.green{ background-color:#FFFFE0; border-radius: 5px; padding: 20px;}
+</style>
+<div class = "green">
+
+## Challenge 4
+ Select all the rows in `veg`from plot 4:
+
+
+</div>
+
+
+
 We saw previously how we can select a single column using the dollar sign `$`:
 
 ```{r}
-veg$Plot.ID
+veg$plot.id
 ```
 
 If we wanted to select a subset of columns, we can specify that in the second 
 position using a character vector of column names:
 
 ```{r}
-veg[ , c("Plot.ID", "pc_cover")]
+veg[ , c("plot.id", "pc_cover")]
 ```
 
-> ## Challenge 5
-> Select all the rows in `veg` with data from P3, and just the columns
-> NewID, Species.Name  and pc_cover
->
-> > Solution to Challenge 5
-> > ```{r}
-> > veg[veg$Plot.ID == "P3", c("NewID", "Plot.ID", "pc_cover")]
-> > ```
+
+<style>
+div.green{ background-color:#FFFFE0; border-radius: 5px; padding: 20px;}
+</style>
+<div class = "green">
+## Challenge 5
+Select all the rows in `veg` with data from P3, and just the columns
+fid, species.name  and pc_cover
+</div>
+
+
+
+
+### Solution to Challenge 1
+
+Read in the third sheet from the excel "WetPlots.xlsx" in the data folder
+
+```{r, eval = FALSE}
+ veg <- read_excel("data/WetPlots.xlsx", 3)
+ veg 
+```
+
+Then tell me how many rows and columns `veg` has:
+ 
+```{r, eval = FALSE}
+ dim(veg)
+ nrow(veg)
+ ncol(veg)
+```
+
+And tell me what kind of data is in the `fid` and `utm_zone` columns
+ 
+```{r, eval = FALSE}
+ str(veg$fid)
+ str(veg$utm_zone)
+ str(veg)
+```
+
+
+### Solution to Challenge 2
+ To check the last few lines it's relatively simple as R already has a function for this:
+```{r}
+ tail(veg)
+ tail(veg, n = 15)
+```
+ 
+ What about a few arbitrary rows just for sanity (or insanity depending on your view)?
+
+## Tip: There are several ways to achieve this.
+ The solution here presents one form of using nested functions, i.e. a function passed as an argument to another function. This might sound like a new concept, but you are already using it!
+Remember my_dataframe[rows, cols] will print to screen your data frame with the number of rows and columns you asked for (although you might have asked for a range or named columns for example). How would you get the last row if you don't know how many rows your data frame has? R has a function for this. What about getting a (pseudorandom) sample? R also has a function for this.
+
+```{r}
+  veg[sample(nrow(veg), 5), ]
+```
+
+
+### Solution to Challenge 4
+```{r}
+veg[veg$plot.id == 4, ]
+```
+
+
+### Solution to Challenge 5
+```{r}
+veg[(veg$plot.id == 3), (c("fid", "plot.id", "pc_cover"))]
+```
+
