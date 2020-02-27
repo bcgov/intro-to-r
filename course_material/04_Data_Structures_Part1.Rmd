@@ -1,9 +1,7 @@
 ---
 title: "Data Structures"
-author: "G Perkins"
-html_document:
-    toc: TRUE
-    toc_float: TRUE
+output: html_document
+#output: word_document
 ---
 
 ```{r setup, include=FALSE}
@@ -13,27 +11,33 @@ knitr::opts_chunk$set(echo = TRUE)
 #     Teaching : 45 mins
 #     Exercise : 15 mins
 
-```
-
 
 ##  Data Structures
 
-- "How can I load a package in R?"
-- "What is the 'tidyverse'?"
-- "How can I read data in R?"
-- "What are the basic data types in R?"
-- "How do I represent categorical information in R?"
+#- "How can I load a package in R?"
+#- "What is the 'tidyverse'?"
+#- "How can I read data in R?"
+#- "What are the basic data types in R?"
 
-objectives:
+#objectives:
 
-- "To be aware of the different types of data."
-- "To begin exploring data frames, and understand how they are related to vectors, factors and lists."
-- "To be able to ask questions from R about the type, class, and structure of an object."
+#- "To be aware of the different types of data."
+#- "To begin exploring data frames, and understand how they are related to vectors, factors and lists."
+# "To be able to ask questions from R about the type, class, and structure of an object."
 
+
+# Note: it's nice to make a list in big writing on the board or taped to the wall
+# listing all of these types and structures - leave it up for the rest of the workshop
+# to remind people of the importance of these basics.
+#  dataTypes <- c('double', 'complex', 'integer', 'character', 'logical')
+# dataStructures <- c('data.frame', 'vector', 'factor', 'list', 'matrix')
+
+
+```
 
 
 One of R's most powerful features is its ability to deal with tabular data -
-such as you may already have in a spreadsheet or a CSV file. Let's start by
+such as you may already have in a spreadsheet or a excel file. Let's start by
 looking at a wetland dataset in your `data/` directory, called `WetPlots.xlsx`:
 
 ## The *readxl* package
@@ -47,7 +51,7 @@ an app on your phone from the app store). Additionally, it is a good idea to
 periodically check for updates to that package:
 
 ```{r, eval=FALSE}
-#install.packages("readxl")
+install.packages("readxl")
 ```
 
 Everytime we want to use that package, you must load it into your R session, by 
@@ -62,7 +66,6 @@ Now we can load this data into R via the following using the `read_excel` functi
 ```{r}
 
 wetland <- read_excel("data/WetPlots.xlsx") 
-wetland
 
 ```
 
@@ -83,24 +86,25 @@ wetland
 And pulling out individual columns by specifying them using the `$` operator:
 
 ```{r}
-wetland$Wetland_ID
-wetland$Surveyors
+wetland$wetland_id
+wetland$surveyors
+wetland$newid
 ```
 
 We can do other operations on the columns:
 
 ```{r}
-## Say we discovered that the scale weighs two Kg light:
-wetland$NewID + 10000
+## Say we wanted to increase the size of our id number by 10000
+wetland$newid + 10000
 
-paste("Site ", wetland$NewID, "was surveyed by", wetland$Surveyors)
+paste("Site ", wetland$newid, "was surveyed by", wetland$surveyors)
 
 ```
 
 But what about
 
 ```{r error=TRUE}
-wetland$NewID + wetland$Surveyors
+wetland$newid + wetland$surveyors
 ```
 
 Understanding what happened here is key to successfully analyzing data in R.
@@ -113,7 +117,7 @@ important concept in programming called *data types*. We can ask what type of
 data something is:
 
 ```{r}
-typeof(wetland$Wetland_ID)
+typeof(wetland$wetland_id)
 ```
 
 There are 4 main types: 
@@ -141,7 +145,6 @@ The table that R loaded our wetland data into is something called a
 structure* - that is, a structure which R knows how to build out of the basic
 data types.
 
-We can see that it is a *data.frame* by calling the `class` function on it:
 
 ```{r}
 class(wetland)
@@ -180,7 +183,7 @@ Vectors can be any data type that we've already learned about. Let's make a
 character vector:
 
 ```{r}
-my_other_vector <- c("Harry", "Ron", "Hermione", "Ginny")
+my_other_vector <- c("Moose", "Bear", "Wolf", "Deer")
 my_other_vector
 ```
 
@@ -189,16 +192,16 @@ class(my_other_vector)
 ```
 
 ```{r}
-my_other_vector == "Harry"
+my_other_vector == "Wolf"
 ```
 
 If we similarly do
 
 ```{r}
-class(wetland$NewID)
+class(wetland$newid)
 ```
 
-we see that `class(wetland$NewID)` is a vector, too - *the columns of data we load into R
+we see that `class(wetland$newid)` is a vector, too - *the columns of data we load into R
 data.frames are all vectors*, and that's the root of why R forces everything in
 a column to be the same basic data type.
 
@@ -207,14 +210,7 @@ a column to be the same basic data type.
 > Why is R so opinionated about what we put in our columns of data?
 > How does this help us?
 >
-> > ## Discussion 1
-> >
-> > By keeping everything in a column the same, we allow ourselves to make simple
-> > assumptions about our data; if you can interpret one entry in the column as a
-> > number, then you can interpret *all* of them as numbers, so we don't have to
-> > check every time. This consistency is what people mean when they talk about 
-> > *clean data*; in the long run, strict consistency goes a long way to making 
-> > our lives easier in R.
+
 Given what we've learned so far, what do you think the following will produce?
 
 ```{r}
@@ -254,15 +250,26 @@ may well be to blame; make sure everything is the same type in your vectors and
 your columns of data.frames, or you will get nasty surprises!
 
 But coercion can also be very useful! For example, in our `wetland` data
-`Slope_string` is numeric, but we know that it also contains a "flat" which is not numeric. Therefore R will convert all the column into a `character` type. 
+`slope_pc` is numeric, but we know that it also contains a "flat" which is not numeric. Therefore R will convert all the column into a `character` type. 
+
+```{r}
+
+wetland$slope_pc
+as.numeric(wetland$slope_pc)
+
+# note what happened to the "flat" site?
+
+```
+
+
 
 ## Data Frames
 
 We said that columns in data.frames were vectors:
 
 ```{r}
-wetland$Wetland_ID
-wetland$Surveyors
+wetland$wetland_id
+wetland$surveyors
 ```
 
 ## Factors
@@ -282,20 +289,12 @@ We can turn a vector into a factor like so:
 
 ```{r}
 aspect_class <- factor(aspect)
-class(aspect_class )
+class(aspect_class)
 aspect_class
 ```
 
-Now R has noticed that there are three possible categories in our data - but it
-also did something surprising; instead of printing out the strings we gave it,
-we got a bunch of numbers instead. R has replaced our human-readable categories
-with numbered indices under the hood, this is necessary as many statistical
-calculations utilise such numerical representations for categorical data:
 
-```{r}
-typeof(aspect)
-typeof(aspect_class)
-```
+## Factors - bonus details 
 
 In modelling functions, it's important to know what the baseline levels are. This
 is assumed to be the first factor, but by default factors are labelled in
@@ -306,6 +305,12 @@ mydata <- c("case", "control", "control", "case")
 factor_ordering_example <- factor(mydata, levels = c("control", "case"))
 str(factor_ordering_example)
 ```
+
+Now R has noticed that there are two possible categories in our data - but it
+also did something surprising; instead of printing out the strings we gave it,
+we got a bunch of numbers instead. R has replaced our human-readable categories
+with numbered indices under the hood, this is necessary as many statistical
+calculations utilise such numerical representations for categorical data.
 
 In this case, we've explicitly told R that "control" should be represented by 1, and
 "case" by 2. This designation can be very important for interpreting the
@@ -342,7 +347,7 @@ In our `wetland` example, we have character and numeric variables
 we have seen already, each column of data.frame is a vector.
 
 ```{r}
-wetland$NewID
+wetland$newid
 wetland[,2]
 str(wetland[,2])
 ```
@@ -356,65 +361,30 @@ typeof(wetland[1,])
 str(wetland[1,])
 ```
 
-> ## Challenge 3
->
-> There are several subtly different ways to call variables, observations and
-> elements from data.frames:
->
-> - `wetland[1]`
-> - `wetland[[1]]`
-> - `wetland$fid`
-> - `wetland["fid"]`
-> - `wetland[1, 1]`
-> - `wetland[, 1]`
-> - `wetland[1, ]`
->
-> Try out these examples and explain what is returned by each one.
->
-> *Hint:* Use the function `typeof()` to examine what is returned in each case.
->
-> > ## Solution to Challenge 3
-> > ```{r, eval=TRUE, echo=TRUE}
-> > wetland[1]
-> > ```
-> > We can think of a data frame as a list of vectors. The single brace `[1]`
-> returns the first slice of the list, as another list. In this case it is the
-> first column of the data frame.
-> > ```{r, eval=TRUE, echo=TRUE}
-> > wetland[[1]]
-> > ```
-> > The double brace `[[1]]` returns the contents of the list item. In this case
-> it is the contents of the first column, a _vector_ of type _factor_.
-> > ```{r, eval=TRUE, echo=TRUE}
-> > wetland$fid
-> > ```
-> > This example uses the `$` character to address items by name. _fid_ is the
-> first column of the data frame, again a _vector_ of type _factor_.
-> > ```{r, eval=TRUE, echo=TRUE}
-> > wetland["fid"]
-> > ```
-> > Here we are using a single brace `["fid"]` replacing the index number with
-> the column name. Like example 1, the returned object is a _list_.
-> > ```{r, eval=TRUE, echo=TRUE}
-> > wetland[1, 1]
-> > ```
-> > This example uses a single brace, but this time we provide row and column
-> coordinates. The returned object is the value in row 1, column 1. The object
-> is an _integer_ but because it is part of a _vector_ of type _factor_, R
-> displays the label "calico" associated with the integer value.
-> > ```{r, eval=TRUE, echo=TRUE}
-> > wetland[, 1]
-> > ```
-> > Like the previous example we use single braces and provide row and column
-> coordinates. The row coordinate is not specified, R interprets this missing
-> value as all the elements in this _column_ _vector_.
-> > ```{r, eval=TRUE, echo=TRUE}
-> > wetland[1, ]
-> > ```
-> > Again we use the single brace with row and column coordinates. The column
-> coordinate is not specified. The return value is a _list_ containing all the
-> values in the first row.
 
+<style>
+div.green{ background-color:#FFFFE0; border-radius: 5px; padding: 20px;}
+</style>
+<div class = "green">
+
+## Challenge 1
+
+There are several subtly different ways to call variables, observations and
+elements from data.frames:
+
+- `wetland[1]`
+- `wetland[[1]]`
+- `wetland$fid`
+- `wetland["fid"]`
+- `wetland[1, 1]`
+- `wetland[, 1]`
+- `wetland[1, ]`
+
+ Try out these examples and explain what is returned by each one.
+
+ *Hint:* Use the function `typeof()` to examine what is returned in each case.
+
+</div>
 
 ## Matrices
 
@@ -436,94 +406,133 @@ nrow(matrix_example)
 ncol(matrix_example)
 ```
 
-> ## Challenge 4
->
-> What do you think will be the result of
-> `length(matrix_example)`?
-> Try it.
-> Were you right? Why / why not?
->
-> > ## Solution to Challenge 4
-> >
-> > What do you think will be the result of
-> > `length(matrix_example)`?
-> >
-> > ```{r}
-> > matrix_example <- matrix(0, ncol=6, nrow=3)
-> > length(matrix_example)
-> > ```
-> >
-> > Because a matrix is a vector with added dimension attributes, `length`
-> > gives you the total number of elements in the matrix.
+<style>
+div.green{ background-color:#FFFFE0; border-radius: 5px; padding: 20px;}
+</style>
+<div class = "green">
 
-> ## Challenge 5
->
-> Make another matrix, this time containing the numbers 1:50,
-> with 5 columns and 10 rows.
-> Did the `matrix` function fill your matrix by column, or by
-> row, as its default behaviour?
-> See if you can figure out how to change this.
-> (hint: read the documentation for `matrix`!)
->
-> > ## Solution to Challenge 5
-> >
-> > Make another matrix, this time containing the numbers 1:50,
-> > with 5 columns and 10 rows.
-> > Did the `matrix` function fill your matrix by column, or by
-> > row, as its default behaviour?
-> > See if you can figure out how to change this.
-> > (hint: read the documentation for `matrix`!)
-> >
-> > ```{r, eval=FALSE}
-> > x <- matrix(1:50, ncol=5, nrow=10)
-> > x <- matrix(1:50, ncol=5, nrow=10, byrow = TRUE) # to fill by row
-> > ```
+## Challenge 2
 
-> ## Challenge 6
->  Create a list of length two containing a character vector for each of the sections in this part of the workshop:
->
->  - Data types
->  - Data structures
->
->  Populate each character vector with the names of the data types and data
->  structures we've seen so far.
->
-> > ## Solution to Challenge 6
-> > ```{r}
-> > dataTypes <- c('double', 'complex', 'integer', 'character', 'logical')
-> > dataStructures <- c('data.frame', 'vector', 'factor', 'list', 'matrix')
-> > answer <- list(dataTypes, dataStructures)
-> > ```
-> > Note: it's nice to make a list in big writing on the board or taped to the wall
-> > listing all of these types and structures - leave it up for the rest of the workshop
-> > to remind people of the importance of these basics.
-> >
+What do you think will be the result of
+ `length(matrix_example)`?
+ Try it.
+ Were you right? Why / why not?
 
-> ## Challenge 7
+## Challenge 3
+
+ Make another matrix, this time containing the numbers 1:50,
+ with 5 columns and 10 rows.
+ Did the `matrix` function fill your matrix by column, or by
+ row, as its default behaviour?
+ See if you can figure out how to change this.
+ (hint: read the documentation for `matrix`!)
+
+## Challenge 4
+
+Consider the R output of the matrix below:
+```{r, echo=FALSE}
+ matrix(c(4, 1, 9, 5, 10, 7), ncol = 2, byrow = TRUE)
+```
+ What was the correct command used to write this matrix? Examine
+ each command and try to figure out the correct one before typing them.
+ Think about what matrices the other commands will produce.
+
+1. `matrix(c(4, 1, 9, 5, 10, 7), nrow = 3)`
+2. `matrix(c(4, 9, 10, 1, 5, 7), ncol = 2, byrow = TRUE)`
+3. `matrix(c(4, 9, 10, 1, 5, 7), nrow = 2)`
+4. `matrix(c(4, 1, 9, 5, 10, 7), ncol = 2, byrow = TRUE)`
+
+</div>
+
+
+> ## Discussion 1
 >
-> Consider the R output of the matrix below:
-> ```{r, echo=FALSE}
-> matrix(c(4, 1, 9, 5, 10, 7), ncol = 2, byrow = TRUE)
+> By keeping everything in a column the same, we allow ourselves to make simple
+> assumptions about our data; if you can interpret one entry in the column as a
+> number, then you can interpret *all* of them as numbers, so we don't have to
+> check every time. This consistency is what people mean when they talk about 
+> *clean data*; in the long run, strict consistency goes a long way to making 
+> our lives easier in R.
+>
+> ## Solution to Challenge 1
+> ```{r, eval=TRUE, echo=TRUE}
+> wetland[1]
 > ```
-> What was the correct command used to write this matrix? Examine
-> each command and try to figure out the correct one before typing them.
-> Think about what matrices the other commands will produce.
->
-> 1. `matrix(c(4, 1, 9, 5, 10, 7), nrow = 3)`
-> 2. `matrix(c(4, 9, 10, 1, 5, 7), ncol = 2, byrow = TRUE)`
-> 3. `matrix(c(4, 9, 10, 1, 5, 7), nrow = 2)`
-> 4. `matrix(c(4, 1, 9, 5, 10, 7), ncol = 2, byrow = TRUE)`
->
-> > ## Solution to Challenge 7
-> >
-> > Consider the R output of the matrix below:
-> > ```{r, echo=FALSE}
-> > matrix(c(4, 1, 9, 5, 10, 7), ncol = 2, byrow = TRUE)
-> > ```
-> > What was the correct command used to write this matrix? Examine
-> > each command and try to figure out the correct one before typing them.
-> > Think about what matrices the other commands will produce.
-> > ```{r, eval=FALSE}
-> > matrix(c(4, 1, 9, 5, 10, 7), ncol = 2, byrow = TRUE)
-> > ```
-
+> We can think of a data frame as a list of vectors. The single brace `[1]`
+> returns the first slice of the list, as another list. In this case it is the
+> first column of the data frame.
+> ```{r, eval=TRUE, echo=TRUE}
+>  wetland[[1]]
+> ```
+>  The double brace `[[1]]` returns the contents of the list item. In this case
+> it is the contents of the first column, a _vector_ of type _factor_.
+> ```{r, eval=TRUE, echo=TRUE}
+>  wetland$fid
+> ```
+>  This example uses the `$` character to address items by name. _fid_ is the
+> first column of the data frame, again a _vector_ of type _factor_.
+> ```{r, eval=TRUE, echo=TRUE}
+>  wetland["fid"]
+> ```
+> Here we are using a single brace `["fid"]` replacing the index number with
+> the column name. Like example 1, the returned object is a _list_.
+> ```{r, eval=TRUE, echo=TRUE}
+>  wetland[1, 1]
+> ```
+>  This example uses a single brace, but this time we provide row and column
+> coordinates. The returned object is the value in row 1, column 1. The object
+> is an _integer_ but because it is part of a _vector_ of type _factor_, R
+> displays the label "calico" associated with the integer value.
+> ```{r, eval=TRUE, echo=TRUE}
+>  wetland[, 1]
+> ```
+> Like the previous example we use single braces and provide row and column
+> coordinates. The row coordinate is not specified, R interprets this missing
+> value as all the elements in this _column_ _vector_.
+> ```{r, eval=TRUE, echo=TRUE}
+>  wetland[1, ]
+> ```
+> Again we use the single brace with row and column coordinates. The column
+> coordinate is not specified. The return value is a _list_ containing all the
+> values in the first row.
+> 
+> ## Solution to Challenge 2
+> 
+>  What do you think will be the result of
+>  `length(matrix_example)`?
+> 
+> ```{r}
+>  matrix_example <- matrix(0, ncol=6, nrow=3)
+>  length(matrix_example)
+> ```
+> 
+>  Because a matrix is a vector with added dimension attributes, `length`
+>  gives you the total number of elements in the matrix.
+> 
+> 
+> ## Solution to Challenge 3
+> 
+>  Make another matrix, this time containing the numbers 1:50,
+> with 5 columns and 10 rows.
+>  Did the `matrix` function fill your matrix by column, or by
+>  row, as its default behaviour?
+>  See if you can figure out how to change this.
+>  (hint: read the documentation for `matrix`!)
+> 
+> ```{r, eval=FALSE}
+>  x <- matrix(1:50, ncol=5, nrow=10)
+>  x <- matrix(1:50, ncol=5, nrow=10, byrow = TRUE) # to fill by row
+> ```
+> 
+> ## Solution to Challenge 4
+> 
+>  Consider the R output of the matrix below:
+> ```{r, echo=FALSE}
+>  matrix(c(4, 1, 9, 5, 10, 7), ncol = 2, byrow = TRUE)
+> ```
+>  What was the correct command used to write this matrix? Examine
+>  each command and try to figure out the correct one before typing them.
+>  Think about what matrices the other commands will produce.
+> ```{r, eval=FALSE}
+>  matrix(c(4, 1, 9, 5, 10, 7), ncol = 2, byrow = TRUE)
+> ```
