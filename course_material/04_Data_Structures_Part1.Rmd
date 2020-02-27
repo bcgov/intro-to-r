@@ -2,7 +2,10 @@
 title: "Untitled"
 author: "G Perkins"
 date: "05/02/2020"
-output: html_document
+html_document:
+    toc: TRUE
+    toc_float: TRUE
+
 ---
 ---
 title: "Data Structures"
@@ -57,7 +60,7 @@ Now we can load this data into R via the following using the `read_excel` functi
 
 ```{r}
 
-#wetland <- read_excel("./data/WetPlots.xlsx") 
+
 wetland <- read_excel("data/WetPlots.xlsx") 
 wetland
 
@@ -360,8 +363,8 @@ str(wetland[1,])
 >
 > - `wetland[1]`
 > - `wetland[[1]]`
-> - `wetland$FID`
-> - `wetland["FID"]`
+> - `wetland$fid`
+> - `wetland["fid"]`
 > - `wetland[1, 1]`
 > - `wetland[, 1]`
 > - `wetland[1, ]`
@@ -383,14 +386,14 @@ str(wetland[1,])
 > > The double brace `[[1]]` returns the contents of the list item. In this case
 > it is the contents of the first column, a _vector_ of type _factor_.
 > > ```{r, eval=TRUE, echo=TRUE}
-> > wetland$FID
+> > wetland$fid
 > > ```
-> > This example uses the `$` character to address items by name. _FID_ is the
+> > This example uses the `$` character to address items by name. _fid_ is the
 > first column of the data frame, again a _vector_ of type _factor_.
 > > ```{r, eval=TRUE, echo=TRUE}
-> > wetland["FID"]
+> > wetland["fid"]
 > > ```
-> > Here we are using a single brace `["FID"]` replacing the index number with
+> > Here we are using a single brace `["fid"]` replacing the index number with
 > the column name. Like example 1, the returned object is a _list_.
 > > ```{r, eval=TRUE, echo=TRUE}
 > > wetland[1, 1]

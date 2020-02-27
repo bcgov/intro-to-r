@@ -35,42 +35,44 @@ The goal of this 1-day workshop is to teach people with no R experience how read
 
 ### Workshop Outline
 
-- **What is R?** 
-  - An Introduction to R & RStudio
+- **Why do I use R?** (10 mins)
+
+- **What is R?** (1 hour)
+  - Getting to know R and R-Studio
   
-- **What can you do with R?**
-  -	Example of data summaries and how to output plots  
-  -	How to automate repeated work 
-  -	Differences to excel (positives/negatives)
+- **How to find help** (20 mins)
+  -	How to read a help file?
+  - Getting help with packages
   
-- **Some fundamentals to understand coding**
-  -	What is object-oriented code? 
-  -	How to find help: tools and tricks
+- **Project Management With RStudio** (30 mins)
+  -	how to create an R project
+  -	Best practices for setting up your data 
 
-- **Reading in data**
-  -	Read in excel table examples using example wildlife data set (ie: fish measurement/ vegetation measures, water quality data. 
-  -	Understand data types and structure
-  -	Error checking
+- Break
 
-- **Manipulate your data** 
-  -	Summarise your data 
-  -	Calculate mean values along with the spread of distribution (upper and lower confidence intervals)
-  -	Exporting your data from R (excel, kml). 
+- **Exploring data types** (60 mins)
+  - how to load a package in R"
+  - how to read data in R"
+  - Understand data types and structure"
 
+- **Manpulating data in r** (30 mins)
+  - summarising data types 
+  - error checking 
+  
+- Lunch 
+
+- **manipulating your data using dplyr** (30 mins)
+  - summarising data types 
+  - error checking 
 
 - **Graphing your data**
   -	Create box plots, bar charts, line plots with error bars.
-  -	Optional:  write out shapefiles and or create some base maps. 
-
-
-- **Automating your work using R**
-  -	Put together all the things you have learnt with a new dataset and repeat!
+  -	Optional: write out shapefiles and or create some base maps. 
 
 - **R Demos** 
-  - TBD ? 
+  - Designing a stream sampling plan using R. 
   -	Using R for GIS analysis – ie: estimate % and area of fire within a given area of interest
-  -	Calculate home range from telemetry data and map the results. 
-  -	Create maps Map moose habitat 
+
  
   
 ----------  
