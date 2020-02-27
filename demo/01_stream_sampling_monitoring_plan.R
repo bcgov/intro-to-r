@@ -3,6 +3,11 @@
 # determine sampling points for a fish monitoring survey
 
 
+# install packages if needed 
+
+install.packages(c("bcdata", "bcmaps", "sf","dplyr"))
+
+
 # read in libraries 
 
 library(bcdata)
@@ -25,11 +30,13 @@ ws <- get_layer("wsc_drainages", class = "sf") %>%
 ## plot the data to verify locations 
 
 #plot(ws["SUB_DRAINAGE_AREA_NAME"], key.pos = NULL)
-#mapview::mapview(ws)
+mapview::mapview(ws)
 
 study_area <- ws %>% 
   filter(SUB_SUB_DRAINAGE_AREA_NAME == "Babine") %>%
   st_union()
+
+mapview::mapview(study_area)
 
 # read in the VRI data 
 
