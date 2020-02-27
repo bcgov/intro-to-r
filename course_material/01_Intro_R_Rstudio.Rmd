@@ -1,7 +1,8 @@
 ---
 title: "Getting to know R and R-Studio"
-author: "G Perkins"
 output: html_document
+#output: word_document
+
 ---
 
 ```{r setup, include=FALSE}
@@ -65,7 +66,7 @@ interactive R console.
 
 
 <style>
-div.blue { background-color:#e6f0ff; border-radius: 5px; padding: 10px;}
+div.blue { background-color:#e6f0ff; border-radius: 5px; padding: 5px;}
 </style>
 <div class = "blue">
 
@@ -125,7 +126,7 @@ a command you can simply hit "Esc" and RStudio will give you back the ">"
 prompt.
 
 <style>
-div.blue { background-color:#e6f0ff; border-radius: 5px; padding: 20px;}
+div.blue { background-color:#e6f0ff; border-radius: 5px; padding: 5px;}
 </style>
 <div class = "blue">
 ### Tip: Cancelling commands
@@ -136,8 +137,7 @@ div.blue { background-color:#e6f0ff; border-radius: 5px; padding: 20px;}
 
 </div>
 
-When using R as a calculator, the order of operations is the same as you
-would have learned back in school.
+When using R as a calculator, there is an order of operations.
 
 From highest to lowest precedence:
 
@@ -160,7 +160,7 @@ intend.
 (3 + 5) * 2
 ```
 
-This can get unwieldy when not needed, but  clarifies your intentions.
+This can get unwieldy when not needed, but clarifies your intentions.
 Remember that others may later read your code.
 
 ```{r, eval=FALSE}
@@ -171,7 +171,7 @@ Remember that others may later read your code.
 
 
 The text after each line of code is called a
-"comment". Anything that follows after the hash (or octothorpe) symbol
+"comment". Anything that follows after the hash symbol
 `#` is ignored by R when it executes code.
 
 Really small or large numbers get a scientific notation:
@@ -260,7 +260,7 @@ We can also do comparison in R:
 ```
 
 <style>
-div.blue { background-color:#e6f0ff; border-radius: 5px; padding: 20px;}
+div.blue { background-color:#e6f0ff; border-radius: 5px; padding: 5px;}
 </style>
 <div class = "blue">
 
@@ -350,42 +350,27 @@ But this is much less common among R users.  The most important thing is to
 where it is less confusing to use `<-` than `=`, and it is the most common
 symbol used in the community. So the recommendation is to use `<-`.
 
-> ## Challenge 1
->
-> Which of the following are valid R variable names?
-> ```{r, eval=FALSE}
-> min_height
-> max.height
-> _age
-> .mass
-> MaxLength
-> min-length
-> 2widths
-> celsius2kelvin
-> ```
->
-> > ## Solution to challenge 1
-> >
-> > The following can be used as R variables:
-> > ```{r ch1pt1-sol, eval=FALSE}
-> > min_height
-> > max.height
-> > MaxLength
-> > celsius2kelvin
-> > ```
-> >
-> > The following creates a hidden variable:
-> > ```{r ch1pt2-sol, eval=FALSE}
-> > .mass
-> > ```
-> >
-> > The following will not be able to be used to create a variable
-> > ```{r ch1pt3-sol, eval=FALSE}
-> > _age
-> > min-length
-> > 2widths
-> > ```
 
+<style>
+div.green{ background-color:#FFFFE0; border-radius: 5px; padding: 20px;}
+</style>
+<div class = "green">
+
+## Challenge 1
+
+ Which of the following are valid R variable names?
+ ```{r, eval=FALSE}
+ min_height
+ max.height
+ _age
+ .mass
+ MaxLength
+ min-length
+ 2widths
+ celsius2kelvin
+ ```
+
+</div>
 
 ## Vectorization
 
@@ -418,12 +403,18 @@ There are a few useful commands you can use to interact with the R session.
 ls()
 ```
 
+<style>
+div.blue { background-color:#e6f0ff; border-radius: 5px; padding: 5px;}
+</style>
+<div class = "blue">
+
 > ## Tip: hidden objects
 >
 > Like in the shell, `ls` will hide any variables or functions starting
 > with a "." by default. To list all objects, type `ls(all.names=TRUE)`
 > instead
->
+
+</div>
 
 Note here that we didn't give any arguments to `ls`, but we still
 needed to give the parentheses to tell R to call the function.
@@ -448,6 +439,11 @@ rm(list = ls())
 ```
 
 
+<style>
+div.blue { background-color:#e6f0ff; border-radius: 5px; padding: 5px;}
+</style>
+<div class = "blue">
+
 > ## Tip: Warnings vs. Errors
 >
 > Pay attention when R does something unexpected! Errors, like above,
@@ -457,7 +453,8 @@ rm(list = ls())
 >
 > In both cases, the message that R prints out usually give you clues
 > how to fix a problem.
->
+
+</div>
 
 ## R Packages
 
@@ -480,80 +477,115 @@ R and RStudio have functionality for managing packages:
 * You can remove a package with `remove.packages("packagename")`
 * You can make a package available for use with `library(packagename)`
 
-> ## Challenge 2
->
-> What will be the value of each  variable  after each
-> statement in the following program?
->
-> ```{r, eval=FALSE}
-> mass <- 47.5
-> age <- 122
-> mass <- mass * 2.3
-> age <- age - 20
-> ```
->
-> > ## Solution to challenge 2
-> >
-> > ```{r ch2pt1-sol}
-> > mass <- 47.5
-> > ```
-> > This will give a value of `r mass` for the variable mass
-> >
-> > ```{r ch2pt2-sol}
-> > age <- 122
-> > ```
-> > This will give a value of `r age` for the variable age
-> >
-> > ```{r ch2pt3-sol}
-> > mass <- mass * 2.3
-> > ```
-> > This will multiply the existing value of `r mass/2.3` by 2.3 to give a new value of
-> > `r mass` to the variable mass.
-> >
-> > ```{r ch2pt4-sol}
-> > age <- age - 20
-> > ```
-> > This will subtract 20 from the existing value of `r age + 20 ` to give a new value
-> > of `r age` to the variable age.
+
+<style>
+div.green{ background-color:#FFFFE0; border-radius: 5px; padding: 20px;}
+</style>
+<div class = "green">
 
 
+## Challenge 2
 
-> ## Challenge 3
->
-> Run the code from the previous challenge, and write a command to
-> compare mass to age. Is mass larger than age?
->
-> > ## Solution to challenge 3
-> >
-> > One way of answering this question in R is to use the `>` to set up the following:
-> > ```{r ch3-sola}
-> > mass > age
-> >```
-> > This should yield a boolean value of TRUE since `r mass` is greater than `r age`.
+ What will be the value of each  variable  after each
+ statement in the following program?
 
+```{r, eval=FALSE}
+ mass <- 47.5
+ age <- 122
+ mass <- mass * 2.3
+ age <- age - 20
+```
 
+## Challenge 3
 
-> ## Challenge 4
->
-> Clean up your working environment by deleting the mass and age
-> variables.
->
-> > ## Solution to challenge 4
-> >
-> > We can use the `rm` command to accomplish this task
-> > ```{r ch4-sol}
-> > rm(age, mass)
-> > ```
+ Run the code from the previous challenge, and write a command to
+ compare mass to age. Is mass larger than age?
 
 
-> ## Challenge 5
->
-> Install the following packages: `ggplot2` and `plyr`
->
-> > ## Solution to challenge 5
-> >
-> > We can use the `install.packages()` command to install the required packages.
-> > ```{r ch5-sol, eval=FALSE}
-> > install.packages("ggplot2")
-> > install.packages("plyr")
-> >```
+## Challenge 4
+
+ Clean up your working environment by deleting the mass and age
+ variables.
+
+## Challenge 5
+
+ Install the following packages: `ggplot2` and `plyr`
+
+
+</div>
+
+<style>
+div.green{ background-color:#FFFFE0; border-radius: 5px; padding: 20px;}
+</style>
+<div class = "green">
+
+
+## Solution to challenge 1
+ 
+  The following can be used as R variables:
+```{r ch1pt1-sol, eval=FALSE}
+  min_height
+  max.height
+  MaxLength
+  celsius2kelvin
+```
+ 
+  The following creates a hidden variable:
+```{r ch1pt2-sol, eval=FALSE}
+  .mass
+```
+ 
+  The following will not be able to be used to create a variable
+```{r ch1pt3-sol, eval=FALSE}
+  _age
+  min-length
+  2widths
+``` 
+
+## Solution to challenge 2
+ 
+```{r ch2pt1-sol}
+mass <- 47.5
+```
+  This will give a value of `r mass` for the variable mass
+ 
+```{r ch2pt2-sol}
+  age <- 122
+```
+  This will give a value of `r age` for the variable age
+ 
+```{r ch2pt3-sol}
+  mass <- mass * 2.3
+```
+  This will multiply the existing value of `r mass/2.3` by 2.3 to give a new value of
+  `r mass` to the variable mass.
+ 
+```{r ch2pt4-sol}
+  age <- age - 20
+```
+  
+  This will subtract 20 from the existing value of `r age + 20 ` to give a new value
+  of `r age` to the variable age.
+ 
+## Solution to challenge 3
+ 
+  One way of answering this question in R is to use the `>` to set up the following:
+```{r ch3-sola}
+  mass > age
+```
+  This should yield a boolean value of TRUE since `r mass` is greater than `r age`.
+
+## Solution to challenge 4
+ 
+  We can use the `rm` command to accomplish this task
+```{r ch4-sol}
+  rm(age, mass)
+```
+
+## Solution to challenge 5
+ 
+  We can use the `install.packages()` command to install the required packages.
+```{r ch5-sol, eval=FALSE}
+  install.packages("ggplot2")
+  install.packages("plyr")
+```
