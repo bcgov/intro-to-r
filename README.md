@@ -95,11 +95,23 @@ Please note that this project is released with a [Contributor Code of Conduct](C
 
 ---------
 
-### License
+###  Credits & Licensing
+
+The contents presented here is drawn from a number of sources including: 
+
+- [Introduction to Data Science using R](https://github.com/bcgov/ds-cop-intro-to-) - Original Work Copyright © Software Carpentry, content modified by the Province of British Columbia. 
+- [Data Carpentry](https://datacarpentry.org/) - Licensed under CC-BY 4.0 2018–2019 by The Carpentries
+- [Geocomputation in R](https://geocompr.robinlovelace.net/) - Licences under a Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License.
+
+
+
+--------
 
 [![Creative Commons License](https://i.creativecommons.org/l/by/4.0/88x31.png)](http://creativecommons.org/licenses/by/4.0/)
 
+
 ```
+
 Unless otherwise stated, Copyright 2020 Province of British Columbia
 
 This work is licensed under the Creative Commons Attribution 4.0 International License.
