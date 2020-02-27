@@ -1,35 +1,36 @@
 ---
-title: "Untitled"
+title: "Data Structures"
 author: "G Perkins"
-date: "05/02/2020"
 html_document:
     toc: TRUE
     toc_float: TRUE
+---
 
----
----
-title: "Data Structures"
-teaching: 40
-exercises: 15
-questions:
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+# Time estimate : 
+#     Teaching : 45 mins
+#     Exercise : 15 mins
+
+```
+
+
+##  Data Structures
+
 - "How can I load a package in R?"
 - "What is the 'tidyverse'?"
 - "How can I read data in R?"
 - "What are the basic data types in R?"
 - "How do I represent categorical information in R?"
+
 objectives:
+
 - "To be aware of the different types of data."
 - "To begin exploring data frames, and understand how they are related to vectors, factors and lists."
 - "To be able to ask questions from R about the type, class, and structure of an object."
-keypoints:
-- "Use `readr::read_csv` to read tabular data in R."
-- "The basic data types in R are double, integer, complex, logical, and character."
-- "Use factors to represent categories in R."
-source: Rmd
----
 
 
-# Data Structures
 
 One of R's most powerful features is its ability to deal with tabular data -
 such as you may already have in a spreadsheet or a CSV file. Let's start by
@@ -59,7 +60,6 @@ library(readxl)
 Now we can load this data into R via the following using the `read_excel` function, and assign it to an object called `wetland`:
 
 ```{r}
-
 
 wetland <- read_excel("data/WetPlots.xlsx") 
 wetland

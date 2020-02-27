@@ -1,5 +1,5 @@
 ---
-title: "How to manage a project /scripts"
+title: "Project Management With RStudio"
 author: "G Perkins"
 date: "05/02/2020"
 output: html_document
@@ -7,6 +7,11 @@ output: html_document
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+
+# Time estimate : 
+#     Teaching : 45 mins
+#     Exercise : 10 mins
+
 ```
 
 # Project Management With RStudio
