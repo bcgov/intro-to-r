@@ -1,15 +1,20 @@
 ---
-title: "Untitled"
+title: "Exploring Data Frames"
 author: "G Perkins"
-date: "05/02/2020"
 output: html_document
 ---
 
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+# Time estimate : 
+#     teaching: 20
+#     exercises: 10
+
+```
 
 ---
-title: "Exploring Data Frames"
-teaching: 20
-exercises: 10
+
 questions:
 - "How can I manipulate a data frame?"
 objectives:
@@ -19,11 +24,7 @@ objectives:
 - "Append two data frames."
 - "Understand what a `factor` is."
 - "Convert a `factor` to a `character` vector and vice versa."
-keypoints:
-- "Read in a csv file using `readr::read_csv()`."
-- "Use `str()`, `summary()`, `nrow()`, `ncol()`, `dim()`, `colnames()`, `rownames()`, `head()`, and `typeof()` to understand the structure of a data frame."
-- "Understand the basics of subsetting data frames using `[]` and `$`"
-source: Rmd
+
 ---
 
 ```{r, include=FALSE}
