@@ -301,29 +301,13 @@ of the data frame will not change) or for updating values depending on this give
 
 ```{r}
 
-## NEED TO UPDATE EXAMPLE 
+veg_groups <- veg %>%
+  mutate(latin_family = word(latin, 1)) %>%
+  filter(latin_family == "carex") %>%
+  group_by(fid ) %>%
+  summarize(
+    mean_cover = mean(pc_cover, na.rm = TRUE))
 
-
-## keeping all data but "filtering" after a certain condition
-# calculate GDP only for people with a life expectation above 25
-
-gdp_pop_bycontinents_byyear_above25 <- gapminder %>%
-    mutate(gdp_billion = ifelse(lifeExp > 25, gdpPercap * pop / 10^9, NA)) %>%
-    group_by(continent, year) %>%
-    summarize(mean_gdpPercap = mean(gdpPercap),
-              sd_gdpPercap = sd(gdpPercap),
-              mean_pop = mean(pop),
-              sd_pop = sd(pop),
-              mean_gdp_billion = mean(gdp_billion),
-              sd_gdp_billion = sd(gdp_billion))
-
-## updating only if certain condition is fullfilled
-# for life expectations above 40 years, the gpd to be expected in the future is scaled
-gdp_future_bycontinents_byyear_high_lifeExp <- gapminder %>%
-    mutate(gdp_futureExpectation = ifelse(lifeExp > 40, gdpPercap * 1.5, gdpPercap)) %>%
-    group_by(continent, year) %>%
-    summarize(mean_gdpPercap = mean(gdpPercap),
-              mean_gdpPercap_expected = mean(gdp_futureExpectation))
 ```
 
 ## Combining `dplyr` and `ggplot2`
@@ -390,17 +374,19 @@ veg %>%
 
 Using `dplyr` functions also helps us do calculations on the fly. 
 
-
-
+<style>
+div.green{ background-color:#FFFFE0; border-radius: 5px; padding: 5px;}
+</style>
+<div class = "green">
 
 ## Advanced Challenge
 
-Calculate the average life expectancy in 2002 of 2 randomly selected countries
-for each continent. Then arrange the continent names in reverse order.
+Calculate the average pc_cover of 2 randomly selected species
+for each fid. Then arrange the continent names in reverse order.
 **Hint:** Use the `dplyr` functions `arrange()` and `sample_n()`, they have
 similar syntax to other dplyr functions.
 
-
+</div>
 
 
 ## Solution to Challenge 1
@@ -409,7 +395,6 @@ veg_pc_p2 <- veg %>%
              filter(plot.id == 2) %>%
              select(latin, pc_cover)
 ```
-
 
 
 ## Solution to Challenge 2
@@ -422,21 +407,13 @@ plot_mean <- veg %>%
 
 ```
   
-
-> > ## Solution to Advanced Challenge
-> >```{r}
-> >lifeExp_2countries_bycontinents <- gapminder %>%
-> >    filter(year==2002) %>%
-> >    group_by(continent) %>%
-> >    sample_n(2) %>%
-> >    summarize(mean_lifeExp=mean(lifeExp)) %>%
-> >    arrange(desc(mean_lifeExp))
-> >```
+## Solution to Advanced Challenge
+```{r}
+ veg %>%
+    group_by(fid) %>%
+    sample_n(2) %>%
+    summarize(mean_cover = mean(pc_cover)) %>%
+    arrange(desc(mean_cover))
+```
 
 
-## Other great resources
-
-* [R for Data Science](http://r4ds.had.co.nz/)
-* [Data Wrangling Cheat sheet](https://www.rstudio.com/wp-content/uploads/2015/02/data-wrangling-cheatsheet.pdf)
-* [Introduction to dplyr](https://dplyr.tidyverse.org/)
-* [Data wrangling with R and RStudio](https://www.rstudio.com/resources/webinars/data-wrangling-with-r-and-rstudio/)
