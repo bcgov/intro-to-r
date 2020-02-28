@@ -1,5 +1,5 @@
 ---
-title: "10_resources"
+title: "Other Resources"
 output: html_document
 ---
 
@@ -7,7 +7,6 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-## Resources 
 
 Beginner courses (self paced)
 
