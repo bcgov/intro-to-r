@@ -61,7 +61,7 @@ The goal of this 1-day workshop is to teach people with no R experience how read
   
 - Lunch 
 
-- **manipulating your data using dplyr** (30 mins)
+- **Manipulating your data using dplyr** (30 mins)
   - summarising data types 
   - error checking 
 
@@ -71,7 +71,7 @@ The goal of this 1-day workshop is to teach people with no R experience how read
 
 - **R Demos** 
   - Designing a stream sampling plan using R. 
-  -	Using R for GIS analysis – ie: estimate % and area of fire within a given area of interest
+  -	Using R for GIS analysis 
 
  
   
