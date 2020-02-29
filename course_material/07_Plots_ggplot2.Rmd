@@ -1,27 +1,29 @@
 ---
-title: "Untitled"
-author: "G Perkins"
-date: "05/02/2020"
+title: "Creating Publication-Quality Graphics with ggplot2"
 output: html_document
+#output: word_document
 ---
 
----
-title: "Creating Publication-Quality Graphics with ggplot2"
-teaching: 60
-exercises: 20
-questions:
-- "How can I create publication-quality graphics in R?"
-objectives:
-- "To be able to use ggplot2 to generate publication quality graphics."
-- "To apply geometry, aesthetic, and statisics layers to a ggplot plot."
-- "To manipulate the aesthetics of a plot using different colours, shapes, and lines."
-- "To improve data visualization through transforming scales and paneling by group."
-- "To save a plot created with ggplot to disk."
-keypoints:
-- "Use `ggplot2` to create plots."
-- "Think about graphics in layers: aesthetics, geometry, statistics, scale transformation, and grouping."
-source: Rmd
----
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+# Time estimate : 
+#     Teaching : 45 mins
+#     Exercise : 20 mins
+
+#questions:
+#- "How can I create publication-quality graphics in R?"
+#objectives:
+#- "To be able to use ggplot2 to generate publication quality graphics."
+#- "To apply geometry, aesthetic, and statisics layers to a ggplot plot."
+#- "To manipulate the aesthetics of a plot using different colours, shapes, and lines."
+#- "To improve data visualization through transforming scales and paneling by group."
+#- "To save a plot created with ggplot to disk."
+#keypoints:
+#- "Use `ggplot2` to create plots."
+#- "Think about graphics in layers: aesthetics, geometry, statistics, scale transformation, and #grouping."
+
+```
 
 ```{r setup, include=FALSE}
 source("bin/chunk-options.R")
@@ -61,9 +63,20 @@ Inkscape.
 Let's start off by loading our gapminder data:
 
 ```{r load-data}
-library(readr)
-gapminder <- read_csv("data/gapminder_data.csv")
-gapminder
+library(readxl)
+library(word)
+
+veg <- read_excel("data/WetPlots.xlsx", 3)
+
+#Lets prep the data 
+
+veg <- veg %>%
+  mutate(pc_cover = ifelse(pc_cover == "T", 1, pc_cover),
+         pc_cover = as.numeric(pc_cover),
+         latin_family = word(latin, 1)) %>%
+  filter(!is.na(species.name), 
+         !is.na(pc_cover))
+
 ```
 
 
@@ -72,8 +85,21 @@ And jump right into in me making an example ggplot2 plot:
 ```{r lifeExp-vs-gdpPercap-scatter, message=FALSE}
 # install.packages("ggplot2")
 library("ggplot2")
-ggplot(data = gapminder, mapping = aes(x = gdpPercap, y = lifeExp)) +
+
+ggplot(data = veg, mapping = aes(x = plot.id, y = pc_cover)) +
   geom_point()
+
+# this shows there is an error in the data ! There is a value with 510 %?
+
+veg <- veg %>%
+  mutate(pc_cover = ifelse(pc_cover == 510 , 100, pc_cover))
+
+
+# re -run plot ! 
+ggplot(data = veg, mapping = aes(x = plot.id, y = pc_cover)) +
+  geom_point()
+
+
 ```
 
 So the first thing we do is call the `ggplot` function. This function lets R
@@ -82,19 +108,19 @@ know that we're creating a new plot, and any of the arguments we give the
 layers on the plot.
 
 We've passed in two arguments to `ggplot`. First, we tell `ggplot` what data we
-want to show on our figure, in this example the gapminder data we read in
+want to show on our figure, in this example the vegetation data we read in
 earlier. For the second argument,  we passed in the `aes` function, which
 tells `ggplot` how variables in the **data** map to *aesthetic* properties of
 the figure, in this case the **x** and **y** locations. Here we told `ggplot` we
-want to plot the "gdpPercap" column of the gapminder data frame on the x-axis, and
-the "lifeExp" column on the y-axis. Notice that we didn't need to explicitly
-pass `aes` these columns (e.g. `x = gapminder[, "gdpPercap"]`), this is because
+want to plot the "plot id" column of the veg data frame on the x-axis, and
+the "percent cover" column on the y-axis. Notice that we didn't need to explicitly
+pass `aes` these columns (e.g. `x = veg[, "pc_cover"]`), this is because
 `ggplot` is smart enough to know to look in the **data** for that column!
 
 By itself, the call to `ggplot` isn't enough to draw a figure:
 
 ```{r no-geom}
-ggplot(data = gapminder, mapping = aes(x = gdpPercap, y = lifeExp))
+ggplot(data = veg, mapping = aes(x = plot.id, y = pc_cover))
 ```
 
 We need to tell `ggplot` how we want to visually represent the data, which we
@@ -103,55 +129,42 @@ tells `ggplot` we want to visually represent the relationship between **x** and
 **y** as a scatterplot of points:
 
 ```{r lifeExp-vs-gdpPercap-scatter2}
-ggplot(data = gapminder, mapping = aes(x = gdpPercap, y = lifeExp)) +
+ggplot(data = veg, mapping = aes(x = plot.id, y = pc_cover)) +
   geom_point()
 ```
 
 _Recap_: Every ggplot2 plot has three key components: (1) data, (2) set of aesthetic mappings between variables in the data and visual properties on the plot, and (3) at least one layer, created with a geom function.
 
 
-> ## Challenge 1
->
-> Modify the example so that the figure shows how life expectancy has
-> changed over time:
->
-> ```{r, eval=FALSE}
-> ggplot(data = gapminder, mapping = aes(x = gdpPercap, y = lifeExp)) + geom_point()
-> ```
->
-> Hint: the gapminder dataset has a column called "year", which should appear
-> on the x-axis.
->
-> > ## Solution to challenge 1
-> >
-> > Here is one possible solution:
-> >
-> > ```{r ch1-sol}
-> > ggplot(data = gapminder, mapping = aes(x = year, y = lifeExp)) + geom_point()
-> > ```
-> >
->
-> ## Challenge 2
->
-> In the previous examples and challenge we've used the `aes` function to tell
-> the scatterplot **geom** about the **x** and **y** locations of each point.
-> Another *aesthetic* property we can modify is the point *colour*. Modify the
-> code from the previous challenge to **colour** the points by the "continent"
-> column. What trends do you see in the data? Are they what you expected?
->
-> > ## Solution to challenge 2
-> >
-> > In the previous examples and challenge we've used the `aes` function to tell
-> > the scatterplot **geom** about the **x** and **y** locations of each point.
-> > Another *aesthetic* property we can modify is the point *colour*. Modify the
-> > code from the previous challenge to **colour** the points by the "continent"
-> > column. What trends do you see in the data? Are they what you expected?
-> >
-> > ```{r ch2-sol}
-> > ggplot(data = gapminder, mapping = aes(x = year, y = lifeExp, colour = continent)) +
-> >   geom_point()
-> > ```
-> >
+
+<style>
+div.green{ background-color:#FFFFE0; border-radius: 5px; padding: 20px;}
+</style>
+<div class = "green">
+
+## Challenge 1
+
+ Modify the example so that the figure shows how percent cover has
+ changed per site id:
+
+```{r, eval=FALSE}
+ ggplot(data = veg, mapping = aes(x = plot.id, y = pc_cover) + geom_point()
+        
+```
+
+Hint: the gapminder dataset has a column called "fid", which should appear
+ on the x-axis.
+
+
+## Challenge 2
+ In the previous examples and challenge we've used the `aes` function to tell
+ the scatterplot **geom** about the **x** and **y** locations of each point.
+ Another *aesthetic* property we can modify is the point *colour*. Modify the
+ code from the previous challenge to **colour** the points by the "continent"
+ column. What trends do you see in the data? Are they what you expected?
+
+</div>
+
 
 
 ## Layers
@@ -160,8 +173,9 @@ Using a scatterplot probably isn't the best for visualizing change over time.
 Instead, let's tell `ggplot` to visualize the data as a line plot:
 
 ```{r lifeExp-line-no-group}
-ggplot(data = gapminder, mapping = aes(x = year, y = lifeExp, colour = continent)) +
-  geom_line()
+ggplot(data = veg, mapping = aes(x = plot.id, y = pc_cover, colour = as.factor(fid))) +
+   geom_line()
+
 ```
 
 Instead of adding a `geom_point` layer, we've added a `geom_line` layer, however it looks like the lines are connecting the wrong points? We need to add the **group** *aesthetic*, which tells `ggplot` to draw a line for each country.
@@ -170,6 +184,9 @@ Instead of adding a `geom_point` layer, we've added a `geom_line` layer, however
 ```{r lifeExp-line}
 ggplot(data = gapminder, mapping = aes(x = year, y = lifeExp, colour = continent, group = country)) +
   geom_line()
+
+ggplot(data = veg, mapping = aes(x = fid, y = pc_cover, colour = as.factor(fid)), group = plot.id) +
+   geom_line()
 ```
 
 
@@ -405,3 +422,32 @@ code to modify!
 
 [cheat]: http://www.rstudio.com/wp-content/uploads/2015/03/ggplot2-cheatsheet.pdf
 [ggplot-doc]: http://docs.ggplot2.org/current/
+
+
+
+
+
+## Solution to challenge 1
+
+Here is one possible solution:
+
+```{r ch1-sol}
+ggplot(data = veg, mapping = aes(x = fid, y = pc_cover)) + geom_point()
+```
+
+
+
+## Solution to challenge 2
+
+In the previous examples and challenge we've used the `aes` function to tell
+the scatterplot **geom** about the **x** and **y** locations of each point.
+Another *aesthetic* property we can modify is the point *colour*. Modify the
+code from the previous challenge to **colour** the points by the "continent"
+column. What trends do you see in the data? Are they what you expected?
+
+```{r ch2-sol}
+ggplot(data = veg, mapping = aes(x = fid, y = pc_cover, colour = as.factor(plot.id))) +
+   geom_point()
+
+
+
