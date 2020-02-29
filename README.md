@@ -12,7 +12,7 @@ The goal of this 1-day workshop is to teach people with no R experience how read
 
 ### Event Details 
 - _What_: Introduction to r; what is it?  What does it do? How can it make your life easier? 
-- _Where_: Office of Wet'suwet'en : 3873 1 Ave, Smithers, B.C.
+- _Where_: Nora Building : 3726 Alfred Ave, Smithers, B.C.
 - _When_: 8:30 am Monday March 2nd to 4:30 PM, 2020
 - _Cost_: Free for participants
 
