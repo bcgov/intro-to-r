@@ -8,7 +8,7 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 
 # Time estimate : 
-#     Teaching : 45 mins
+#     Teaching : 20 mins
 #     Exercise : 10 mins
 
 ```
