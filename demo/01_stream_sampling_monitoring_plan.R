@@ -18,8 +18,8 @@
 # vizualise the spread of the data and utilise specific packages
 # to access data from the BC data catalogue. 
 
-# requires : WetPlots.xlsx
 
+# requires : WetPlots.xlsx
 
 
 # set up R session --------------------------------------------------------
@@ -107,24 +107,6 @@ plot_sf <- st_as_sf(plot_wgs, coords = c("X","Y"),  crs = 4236)
 mapview(plot_sf)
 
 
-# Write out a KML file ----------------------------------------------------
-
-# Now we have checked our data we can writ out a KML file so we can 
-# view this is google earth. First we need to convert to a sp object. 
-
-plot_sp <- as(plot_sf, "Spatial") 
-
-# write out a kml 
-kml(plot_sp,
-    file.name    = file.path("demo/wetland_plots.kml"),
-    points_names = plot_sf$fid,
-    colour    = "#FF0000",
-    alpha     = 0.6,
-    size      = 1,
-    shape     = "http://maps.google.com/mapfiles/kml/pal2/icon18.png")
-
-
-
 #  Accessing other BC data sets -------------------------------------------
 
 # lets now look at other datasets that are freely available. As most datasets 
@@ -135,16 +117,11 @@ kml(plot_sp,
 plot <- plot_sf %>% st_transform(3005)
 
 
-# 1. read in the BC boundary 
-bc <- bc_bound()
-mapview(bc) # or 
-plot(st_geometry(bc))
-
-
-# read in the water drainage data set to set up and AOI: 
+# 1. Water Drainage data 
+#  read in the water drainage data set to set up and AOI: 
 # https://catalogue.data.gov.bc.ca/dataset/water-survey-of-canada-sub-sub-drainage-areas
 
-# 2. download the water drainage and use as an area of interest using the bcdata package
+# download the water drainage and use as an area of interest using the bcdata package
 
 ws <- get_layer("wsc_drainages", class = "sf") %>%
   select(SUB_DRAINAGE_AREA_NAME, SUB_SUB_DRAINAGE_AREA_NAME)
@@ -173,7 +150,7 @@ AOI <- ws %>%
 
 
 
-# 3. Lets read in the road network for the AOI 
+# 2. Lets read in the road network for the AOI 
 
 if(file.exists(file.path("demo","roads.rds"))) { 
   roads <- readRDS(file = file.path("demo","roads.rds"))
@@ -215,7 +192,7 @@ roads <- roads %>%
 # plot(st_geometry(roads))
 
 
-# 4. Lets read in the wetland and river data 
+# 3. Lets read in the wetland and river data 
 waterbodies <- bcdc_query_geodata("cb1e3aba-d3fe-4de1-a2d4-b8b6650fb1f6", crs = 3005) %>% # lakes
   bcdata::filter(INTERSECTS(AOI)) %>% 
   collect() 
@@ -224,7 +201,7 @@ rivers <- bcdc_query_geodata("f7dac054-efbf-402f-ab62-6fc4b32a619e", crs = 3005)
   bcdata::filter(INTERSECTS(AOI)) %>% 
   collect() 
 
-wetlands <- bcdc_query_geodata("93b413d8-1840-4770-9629-641d74bd1cc6", crs = 3005) %>% # lakes
+wetlands <- bcdc_query_geodata("93b413d8-1840-4770-9629-641d74bd1cc6", crs = 3005) %>% # wetlands
   bcdata::filter(INTERSECTS(AOI)) %>% 
   collect() 
 
@@ -234,12 +211,11 @@ mapview(wetlands)
 
 # lets select only the smallest lakes 
 waterbodies <- waterbodies %>%
-  select(c(WATERBODY_TYPE, AREA_HA, GNIS_NAME_1)) %>%
+  select(c(WATERBODY_POLY_ID, WATERBODY_TYPE, AREA_HA, GNIS_NAME_1)) %>%
   filter(AREA_HA < 0.5)
   
 wetlands <- wetlands %>% # lakes
-  select(c(WATERBODY_TYPE, AREA_HA, GNIS_NAME_1))
-
+  select(c(WATERBODY_POLY_ID, WATERBODY_TYPE, AREA_HA, GNIS_NAME_1))
 
 
 # lets get the centroid of each of the waterbodies and wetlands 
@@ -258,10 +234,10 @@ wetpt <- wetlandsXY %>%
 waterpt <- bind_rows(wbpt, wetpt ) 
 waterpt <- st_as_sf(waterpt, coords= c("X","Y"), crs = 3005)
 
-mapview(waterpt )
+mapview(waterpt)
 
 
-# lets read in the BEC zones 
+# 4.BEC information 
 
 # Download BEC - # Gets bec_sf zone shape and filters the desired subzones
 bec_sf <- bec(class = "sf") %>%
@@ -270,14 +246,15 @@ bec_sf <- bec(class = "sf") %>%
   st_cast("MULTIPOLYGON")
 
 
-# Stratified random sampling of wetlands  ---------------------------------------------
+
+
+# Part 2: Stratified random sampling of wetlands  ---------------------------------------------
 
 # lets now create a random sample of wetlands 
 # the criteria we want to work with 
-#       - wetlands must be 1km apart 
 #       - wetlands must be within X distance to a road
 #       - create random points within the bec zones ( ) 
-
+#       - dont want to sample where we already have data
 
 
 # lets create a buffer around the roads and then determine which points fall within the 
@@ -285,11 +262,9 @@ bec_sf <- bec(class = "sf") %>%
 
 mapview(roads) 
 
-roads_b1000 <- st_buffer(roads, dist = 1000) %>% 
-  st_union()
+roads_b1000 <- st_buffer(roads, dist = 1000) %>% st_union()
 
-roads_b50 <- st_buffer(roads, dist = 50) %>%
-  st_union()
+roads_b50 <- st_buffer(roads, dist = 50) %>% st_union()
 
 mapview(roads) + mapview(roads_b1000)+ mapview(roads_b50)
 
@@ -297,8 +272,7 @@ mapview(roads) + mapview(roads_b1000)+ mapview(roads_b50)
 
 road_aoi <- st_difference(roads_b1000,  roads_b50)
 
-mapview(road_aoi)+ 
-mapview(waterpt)
+mapview(road_aoi) + mapview(waterpt)
 
 # now lets keep only the wetlands that fall within our given distance from the road
 # this might take some time (as it is a large data set)
@@ -317,93 +291,71 @@ waterpt
 
 # We now have 1842 wetlands!
 
-# We can also see lots of these wetlands are clumped together. In order to 
-# maintain independance lets random subset the wetlands to minimum of 1km apart 
 
-# 
-# dist.mat <- st_distance(waterpt) # Great Circle distance since in lat/lon
-# 
-# # Number within 1.5km: Subtract 1 to exclude the point itself
-# num.500 <- apply(dist.mat, 1, function(x) {
-#   sum(x < 500) - 1
-# })
-# 
-# # Calculate nearest distance
-# nn.dist <- apply(dist.mat, 1, function(x) {
-#   return(sort(x, partial = 2)[2])
-# })
-# 
-# # Get index for nearest distance
-# nn.index <- apply(dist.mat, 1, function(x) { order(x, decreasing=F)[2] })
-# 
-# 
-# x <- cbind(waterpt, nn.index, nn.dist, num.500)
-# 
-# 
-# solopts <- x %>% filter(num.500 == 0)
-# multipts <- x %>% filter(num.500 > 0)
-# 
-# # 640 to choose from! 
+# we can now eliminate any points that have already been sampled - lets buffer out sites by 500m 
+# to ensure no overlap with new points 
 
-# We can now randomly select using the bec types to stratify 
+plot_exclude <- st_buffer(plot, dist = 500)
+
+overlap_pts <- st_intersection(waterpt, plot_exclude)
+
+waterpt <- waterpt %>%
+  filter(!WATERBODY_POLY_ID %in% overlap_pts$WATERBODY_POLY_ID)
+
+
+# We can now randomly select using the bec types to stratify first let us intersect the 
+# point to add the bec zone name and id
 
 bec_pts <- st_intersection(waterpt, bec_sf)
 
-unique(bec_pts$MAP_LABEL)
-#unique(bec_sf$MAP_LABEL)
+# make a list of unique bec variants 
+bgc.ls <- as.list(unique(bec_pts$MAP_LABEL))
 
-bec_sf <- bec_sf %>%
-  filter(MAP_LABEL %in% bec_pts$MAP_LABEL)
 
-prop.sites <- bec_pts %>%
+# If we want to sample 100 sites first we need to calculate the proportion of sites 
+# to sample within each variant 
+
+prop.site <- bec_pts %>%
   group_by(MAP_LABEL)%>%
   summarise(no.pts = n()) %>%
   st_drop_geometry() %>%
   mutate(perc = ceiling(no.pts / sum(no.pts)*100))
 
-  
-for (i in prop.sites$MAP_LABEL) { 
-  
-  i = "ESSFmc"
- 
+
+out <- lapply(bgc.ls, function(x) {
   no.pts <- prop.sites %>% 
-    filter(MAP_LABEL == i) %>% 
+    filter(MAP_LABEL == x) %>% 
     select(perc) %>% 
     pull
+  sdata <- bec_pts  %>%  filter(MAP_LABEL == x)
+  sample_n(sdata, no.pts)
+})
+
+out <- do.call("rbind", out)
+
+mapview(out) + mapview(plot)
+
   
-   sdata <- bec_sf %>%  
-    filter(MAP_LABEL == i )
-    
-   out <- sample_n(sdata, no.pts)
-   
-     
-  }
+  
+# write out as csv   
+  
+write.csv(out, file = "demo/wetland_sample.csv")
 
-sample()
+  
+# Write out a KML file ----------------------------------------------------
 
+# Now we can write out a KML file so we can 
+# view this is google earth. First we need to convert to a sp object. 
 
+out_sp <- as(out, "Spatial") 
 
+# write out a kml 
+kml(out_sp,
+    file.name    = file.path("demo/wetland_points.kml"),
+    points_names = out_sp$MAP_LABEL,
+    colour    = "#FF0000",
+    alpha     = 0.6,
+    size      = 1,
+    shape     = "http://maps.google.com/mapfiles/kml/pal2/icon18.png")
 
-
-
-
-
-
-Complete some spatial analysis to determine a random stratified sampling 
-
-
-2)	Demo’s 
-Bring in watershed (stratified random sampling) 
-a.	Eca  Equiv cc..area 
-b.	Salmon spawning ? FISS (intersect), https://catalogue.data.gov.bc.ca/dataset/known-bc-fish-observations-and-bc-fish-distributions
-c.	Filter by watershed – 
-d.	Promimity to road –  
-e.	
-f.	Road density? 
-  g.	Generate random points ? 
-  h.	, clearing , roads access, random site selection 
-i.	Generate KML 
-j.	Geopackages  export 
-
-Double check tih Don and AMR 
 
