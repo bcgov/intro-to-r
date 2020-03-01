@@ -36,6 +36,7 @@ library(readxl)
 library(mapview)
 library(plotKML)
 library(stringr)
+library(purrr)
 
 
 # read in and check field data --------------------------------------------
@@ -242,58 +243,145 @@ wetlands <- wetlands %>% # lakes
 
 
 # lets get the centroid of each of the waterbodies and wetlands 
-
 waterbodiesXY <- st_centroid(waterbodies) 
 wbpt <- st_coordinates(waterbodiesXY) 
-waterbodiesXY <- 
-
-
+wbpt <- waterbodiesXY %>%
+  cbind(wbpt)%>%
+  st_drop_geometry()
 
 wetlandsXY <- st_centroid(wetlands)
+wetpt <- st_coordinates(wetlandsXY) 
+wetpt <- wetlandsXY %>%
+  cbind(wetpt) %>%
+  st_drop_geometry()
 
-waterpt <- merge(waterbodiesXY, wetlandsXY)
+waterpt <- bind_rows(wbpt, wetpt ) 
+waterpt <- st_as_sf(waterpt, coords= c("X","Y"), crs = 3005)
 
-
-mapview(wetlands)
-
-
-cutblock: 
-  
-b1b647a6-f271-42e0-9cd0-89ec24bce9f7
-
+mapview(waterpt )
 
 
-# read in the VRI data 
-vri <- bcdc_query_geodata("2ebb35d8-c82f-4a17-9c96-612ac3532d55") %>%
-  bcdata::filter(INTERSECTS(AOI)) %>% 
-  bcdata::select(c("BCLCS_LEVEL_2", "HARVEST_DATE")) %>% # Treed sites
-  collect() 
+# lets read in the BEC zones 
 
 # Download BEC - # Gets bec_sf zone shape and filters the desired subzones
 bec_sf <- bec(class = "sf") %>%
-  st_intersection(AOI)
+  st_intersection(AOI) %>%
+  select(ZONE, MAP_LABEL, ZONE_NAME ) %>%
+  st_cast("MULTIPOLYGON")
 
-save(roads, vri,bec_sf, file = "baselayers.RDS")
-readRDS(file.path("demo", "baselayers.RDS"))
+
+# Stratified random sampling of wetlands  ---------------------------------------------
+
+# lets now create a random sample of wetlands 
+# the criteria we want to work with 
+#       - wetlands must be 1km apart 
+#       - wetlands must be within X distance to a road
+#       - create random points within the bec zones ( ) 
 
 
-if(!is.null(subzones)){
-  bec_sf <- dplyr::filter(bec_sf, as.character(MAP_LABEL) %in% subzones)
-  study_area <- st_intersection(study_area, bec_sf) %>% # The AOI is trimmed according to the bec_sf zones included
-    summarise()
-  st_write(study_area, file.path(res_folder, "AOI.gpkg"), delete_layer = TRUE)
+
+# lets create a buffer around the roads and then determine which points fall within the 
+# buffer 
+
+mapview(roads) 
+
+roads_b1000 <- st_buffer(roads, dist = 1000) %>% 
+  st_union()
+
+roads_b50 <- st_buffer(roads, dist = 50) %>%
+  st_union()
+
+mapview(roads) + mapview(roads_b1000)+ mapview(roads_b50)
+
+# now lets get the area more than 50 m and within 1000km 
+
+road_aoi <- st_difference(roads_b1000,  roads_b50)
+
+mapview(road_aoi)+ 
+mapview(waterpt)
+
+# now lets keep only the wetlands that fall within our given distance from the road
+# this might take some time (as it is a large data set)
+
+if(file.exists(file.path("demo","waterpt.rds"))) { 
+  waterpt <- readRDS(file = file.path("demo","waterpt.rds"))
   
+} else {
+  
+  waterpt <-st_intersection(waterpt, road_aoi)
+
+  saveRDS(waterpt, file = "demo/waterpt.rds")
+}
+
+waterpt
+
+# We now have 1842 wetlands!
+
+# We can also see lots of these wetlands are clumped together. In order to 
+# maintain independance lets random subset the wetlands to minimum of 1km apart 
+
+# 
+# dist.mat <- st_distance(waterpt) # Great Circle distance since in lat/lon
+# 
+# # Number within 1.5km: Subtract 1 to exclude the point itself
+# num.500 <- apply(dist.mat, 1, function(x) {
+#   sum(x < 500) - 1
+# })
+# 
+# # Calculate nearest distance
+# nn.dist <- apply(dist.mat, 1, function(x) {
+#   return(sort(x, partial = 2)[2])
+# })
+# 
+# # Get index for nearest distance
+# nn.index <- apply(dist.mat, 1, function(x) { order(x, decreasing=F)[2] })
+# 
+# 
+# x <- cbind(waterpt, nn.index, nn.dist, num.500)
+# 
+# 
+# solopts <- x %>% filter(num.500 == 0)
+# multipts <- x %>% filter(num.500 > 0)
+# 
+# # 640 to choose from! 
+
+# We can now randomly select using the bec types to stratify 
+
+bec_pts <- st_intersection(waterpt, bec_sf)
+
+unique(bec_pts$MAP_LABEL)
+#unique(bec_sf$MAP_LABEL)
+
+bec_sf <- bec_sf %>%
+  filter(MAP_LABEL %in% bec_pts$MAP_LABEL)
+
+prop.sites <- bec_pts %>%
+  group_by(MAP_LABEL)%>%
+  summarise(no.pts = n()) %>%
+  st_drop_geometry() %>%
+  mutate(perc = ceiling(no.pts / sum(no.pts)*100))
+
+  
+for (i in prop.sites$MAP_LABEL) { 
+  
+  i = "ESSFmc"
+ 
+  no.pts <- prop.sites %>% 
+    filter(MAP_LABEL == i) %>% 
+    select(perc) %>% 
+    pull
+  
+   sdata <- bec_sf %>%  
+    filter(MAP_LABEL == i )
+    
+   out <- sample_n(sdata, no.pts)
+   
+     
+  }
+
+sample()
 
 
-
-
-# fix this bit stilll 
-save(roads, vri,bec_sf, file = "baselayers.RDS")
-load(file.path("demo", "baselayers.RDS"))
-
-saveRDS(roads, waterbodies, rivers, file = "demo/baselayers.RDS")
-
-readRDS(file.path("demo", "baselayers.RDS"))
 
 
 
